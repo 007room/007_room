@@ -17,6 +17,7 @@ class User(models.Model):
     profile_image = models.FileField(null=True, blank=True)
     #keywords = models.CharField()                      #보류
 
+
     def __str__(self):
         return "{}".format(self.nickname)
 
@@ -101,6 +102,19 @@ class Qna(models.Model):
         return "{}".format(self.context)
 
 
+class Application(models.Model):
+    post = models.ForeignKey(Post, default=None, on_delete=models.CASCADE)
+    #host = models.ForeignKey(User, default=None, on_delete=models.CASCADE)
+    guest = models.ForeignKey(User, default=None, on_delete=models.CASCADE)
+    start_date = models.IntegerField(default=1)
+    end_date = models.IntegerField(default=1)
+    start_time = models.IntegerField(default=0)
+    end_time = models.IntegerField(default=0)
+    purpost = models.CharField(max_length=200)
+    add_more = models.CharField(max_length=200)         # 한 마디 추가 글
+    phone = models.IntegerField()
+
+
 class Image(models.Model):
     images = models.ImageField() 
     user = models.ForeignKey(User, default=None, on_delete=models.CASCADE)
@@ -115,7 +129,9 @@ class Post_image(Image):
 
 
 class Date(models.Model):
-    day = models.IntegerField(default=1)
+    post = models.ForeignKey(Post, default=None, on_delete=models.CASCADE)
+    start_date = models.IntegerField(default=1)
+    end_date = models.IntegerField(default=1)
     start_time = models.IntegerField(default=0)
     end_time = models.IntegerField(default=0)
 
@@ -132,7 +148,7 @@ class Review_like(Like):
     review = models.ForeignKey(Review, default=None, on_delete=models.CASCADE)
     
 
-class comment(models.Model):
+class Comment(models.Model):
     post = models.ForeignKey(Post, default=None, on_delete=models.CASCADE)
     context = models.TextField()
 
