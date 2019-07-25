@@ -17,6 +17,9 @@ class User(models.Model):
     profile_image = models.FileField(null=True, blank=True)
     #keywords = models.CharField()                      #보류
 
+    def __str__(self):
+        return "{}".format(self.nickname)
+
 
 class Post(models.Model):
     Location_list =(
@@ -59,6 +62,7 @@ class Post(models.Model):
     choose_date = models.DurationField() #!!!!!!! 일정 기간을 저장하는 필드를 만들기    
     '''지역 선택'''
     #location = ArrayField( models.CharField(choices=Location_list, max_length=30, default=default_city))
+    location = models.CharField(choices=Location_list, max_length=50, blank=True)
     '''공간 유형 선택'''
     category = MultiSelectField(choices=Category_list, max_length=50, blank=True)
     etc_what = models.CharField(max_length=50, null=True,blank=True)
@@ -81,6 +85,9 @@ class Review(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     text = models.TextField(null=True)
 
+    def __str__(self):
+        return "{}".format(self.text)
+
 
 class Qna(models.Model):
     post = models.ForeignKey(Post, default=None, on_delete=models.CASCADE)
@@ -89,6 +96,9 @@ class Qna(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     confirm = models.BooleanField(default=False)
     context = models.TextField()
+
+    def __str__(self):
+        return "{}".format(self.context)
 
 
 class Image(models.Model):
@@ -120,6 +130,11 @@ class Post_like(Like):
 
 class Review_like(Like):
     review = models.ForeignKey(Review, default=None, on_delete=models.CASCADE)
+    
 
+class comment(models.Model):
+    post = models.ForeignKey(Post, default=None, on_delete=models.CASCADE)
+    context = models.TextField()
 
-
+    def __str__(self):
+        return "{}".format(self.context)
