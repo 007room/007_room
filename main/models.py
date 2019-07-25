@@ -18,6 +18,10 @@ class User(models.Model):
     #keywords = models.CharField()                      #보류
 
 
+    def __str__(self):
+        return "{}".format(self.nickname)
+
+
 class Post(models.Model):
     Location_list =(
         ('서울특별시','서울특별시'),
@@ -59,6 +63,7 @@ class Post(models.Model):
     choose_date = models.DurationField() #!!!!!!! 일정 기간을 저장하는 필드를 만들기    
     '''지역 선택'''
     #location = ArrayField( models.CharField(choices=Location_list, max_length=30, default=default_city))
+    location = models.CharField(choices=Location_list, max_length=50, blank=True)
     '''공간 유형 선택'''
     category = MultiSelectField(choices=Category_list, max_length=50, blank=True)
     etc_what = models.CharField(max_length=50, null=True,blank=True)
@@ -81,6 +86,9 @@ class Review(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     text = models.TextField(null=True)
 
+    def __str__(self):
+        return "{}".format(self.text)
+
 
 class Qna(models.Model):
     post = models.ForeignKey(Post, default=None, on_delete=models.CASCADE)
@@ -89,6 +97,22 @@ class Qna(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     confirm = models.BooleanField(default=False)
     context = models.TextField()
+
+    def __str__(self):
+        return "{}".format(self.context)
+
+
+class Application(models.Model):
+    post = models.ForeignKey(Post, default=None, on_delete=models.CASCADE)
+    #host = models.ForeignKey(User, default=None, on_delete=models.CASCADE)
+    guest = models.ForeignKey(User, default=None, on_delete=models.CASCADE)
+    start_date = models.IntegerField(default=1)
+    end_date = models.IntegerField(default=1)
+    start_time = models.IntegerField(default=0)
+    end_time = models.IntegerField(default=0)
+    purpost = models.CharField(max_length=200)
+    add_more = models.CharField(max_length=200)         # 한 마디 추가 글
+    phone = models.IntegerField()
 
 
 class Image(models.Model):
@@ -105,7 +129,9 @@ class Post_image(Image):
 
 
 class Date(models.Model):
-    day = models.IntegerField(default=1)
+    post = models.ForeignKey(Post, default=None, on_delete=models.CASCADE)
+    start_date = models.IntegerField(default=1)
+    end_date = models.IntegerField(default=1)
     start_time = models.IntegerField(default=0)
     end_time = models.IntegerField(default=0)
 
@@ -120,6 +146,11 @@ class Post_like(Like):
 
 class Review_like(Like):
     review = models.ForeignKey(Review, default=None, on_delete=models.CASCADE)
+    
 
+class Comment(models.Model):
+    post = models.ForeignKey(Post, default=None, on_delete=models.CASCADE)
+    context = models.TextField()
 
-
+    def __str__(self):
+        return "{}".format(self.context)
