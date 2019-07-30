@@ -115,17 +115,22 @@ class Application(models.Model):
     phone = models.IntegerField()
 
 
-class Image(models.Model):
-    images = models.ImageField() 
+class Qna_image(models.Model):
+    images = models.ImageField(upload_to="image/qna_image") 
     user = models.ForeignKey(User, default=None, on_delete=models.CASCADE)
-
-
-class Qna_image(Image):
     qna = models.ForeignKey(Qna, default=None, on_delete=models.CASCADE)
 
 
-class Post_image(Image):
+class Post_image(models.Model):
+    images = models.ImageField() 
+    user = models.ForeignKey(User, default=None, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, default=None, on_delete=models.CASCADE)
+
+
+class Review_image(models.Model):
+    images = models.ImageField() 
+    user = models.ForeignKey(User, default=None, on_delete=models.CASCADE)
+    review = models.ForeignKey(Review, default=None, on_delete=models.CASCADE)
 
 
 class Date(models.Model):
