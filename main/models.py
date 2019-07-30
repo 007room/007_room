@@ -2,28 +2,11 @@ from django.db import models
 from django.utils import timezone
 from django.db import models
 from multiselectfield import MultiSelectField
+from hitcount.models import HitCountMixin
+
+from django.contrib.auth.models import AbstractUser
 #from array_field_select.fields import ArrayField
-
-def default_city(): # user가 회원가입할 때 지정한? 도시 or seoul
-    return "seoul"
-
-class User(models.Model):
-    email = models.EmailField()                       
-    nickname = models.CharField(max_length=10)        
-    area = models.CharField(max_length=10)
-    report_count = models.IntegerField(default=0)             #신고횟수
-    podo = models.IntegerField(default=10)             # 초기10알
-    gender = models.BooleanField(default=False)    
-    profile_image = models.FileField(null=True, blank=True)
-    #keywords = models.CharField()                      #보류
-
-
-    def __str__(self):
-        return "{}".format(self.nickname)
-
-
-class Post(models.Model):
-    Location_list =(
+Location_list =(
         ('서울특별시','서울특별시'),
         ('부산광역시','부산광역시'),
         ('세종특별시','세종특별시'),
@@ -36,7 +19,30 @@ class Post(models.Model):
         ('경상북도','경상북도'),
         ('경상남도','경상남도'),     
     )
+def default_city(): # user가 회원가입할 때 지정한? 도시 or seoul
+    return "seoul"
 
+class CustomUser(AbstractUser):
+    '''django 기존 User모델과 연동'''
+    # REQUIRED_FIELDS = ('user',)
+    # user = models.OneToOneField(User,unique=True, on_delete=models.CASCADE)
+
+    email = models.EmailField()                       
+    nickname = models.CharField(max_length=10)        
+    area = models.CharField(choices=Location_list, max_length=50, blank=True)
+    report_count = models.IntegerField(default=0)             #신고횟수
+    podo = models.IntegerField(default=10)             # 초기10알
+    gender = models.BooleanField(default=False)    
+    profile_image = models.FileField(null=True, blank=True)
+    #keywords = models.CharField()                      #보류
+
+
+    def __str__(self):
+        return "{}".format(self.email)
+
+
+class Post(models.Model,HitCountMixin):
+    
     Category_list = (  
         ('study','StudyRoom'), 
         ('performance','PerformanceRoom'),
@@ -59,7 +65,7 @@ class Post(models.Model):
         
     title = models.CharField(max_length=50)
     context = models.TextField()
-    user = models.ForeignKey(User, default=None, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, default=None, on_delete=models.CASCADE)
     choose_date = models.DurationField() #!!!!!!! 일정 기간을 저장하는 필드를 만들기    
     '''지역 선택'''
     #location = ArrayField( models.CharField(choices=Location_list, max_length=30, default=default_city))
@@ -80,7 +86,7 @@ class Post(models.Model):
             return "ROOM etc :{}".format(self.etc_what) 
 
 class Review(models.Model):
-    user = models.ForeignKey(User, default=None, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, default=None, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, default=None, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -92,7 +98,7 @@ class Review(models.Model):
 
 class Qna(models.Model):
     post = models.ForeignKey(Post, default=None, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, default=None, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, default=None, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     confirm = models.BooleanField(default=False)
@@ -105,7 +111,7 @@ class Qna(models.Model):
 class Application(models.Model):
     post = models.ForeignKey(Post, default=None, on_delete=models.CASCADE)
     #host = models.ForeignKey(User, default=None, on_delete=models.CASCADE)
-    guest = models.ForeignKey(User, default=None, on_delete=models.CASCADE)
+    guest = models.ForeignKey(CustomUser, default=None, on_delete=models.CASCADE)
     start_date = models.IntegerField(default=1)
     end_date = models.IntegerField(default=1)
     start_time = models.IntegerField(default=0)
@@ -114,22 +120,22 @@ class Application(models.Model):
     add_more = models.CharField(max_length=200)         # 한 마디 추가 글
     phone = models.IntegerField()
 
-
+#upload_to="anony_Board/%Y/%m/%d"
 class Qna_image(models.Model):
-    images = models.ImageField(upload_to="image/qna_image") 
-    user = models.ForeignKey(User, default=None, on_delete=models.CASCADE)
+    images = models.ImageField(blank=True,upload_to="image/qna_image/%Y/%m/%d") 
+    user = models.ForeignKey(CustomUser, default=None, on_delete=models.CASCADE)
     qna = models.ForeignKey(Qna, default=None, on_delete=models.CASCADE)
 
 
 class Post_image(models.Model):
-    images = models.ImageField() 
-    user = models.ForeignKey(User, default=None, on_delete=models.CASCADE)
+    images = models.ImageField(blank=True,upload_to="image/post_image/%Y/%m/%d") 
+    user = models.ForeignKey(CustomUser, default=None, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, default=None, on_delete=models.CASCADE)
 
 
 class Review_image(models.Model):
-    images = models.ImageField() 
-    user = models.ForeignKey(User, default=None, on_delete=models.CASCADE)
+    images = models.ImageField(blank=True,upload_to="image/review_image/%Y/%m/%d") 
+    user = models.ForeignKey(CustomUser, default=None, on_delete=models.CASCADE)
     review = models.ForeignKey(Review, default=None, on_delete=models.CASCADE)
 
 
@@ -142,7 +148,7 @@ class Date(models.Model):
 
 
 class Like(models.Model):
-    user = models.ForeignKey(User, default=None, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, default=None, on_delete=models.CASCADE)
 
 
 class Post_like(Like):
