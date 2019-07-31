@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'host',
     'guest',
     'post',
+    'hitcount',
 ]
 
 MIDDLEWARE = [
@@ -123,16 +124,21 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 # 실제 경로 x
+# STATIC_URL = '/static/'
+# # 정적파일 경로 지정 ( 실제 경로 )
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, 'static'),
+# ]
+# # 경로 모든 파일을 웹서버가 직접 제공하기 위함
+# # staticfiles 디렉터리로 지정 / 모든 정적 파일들 복사
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+# # media file 
+# MEDIA_URL = '/media/'
+
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
+AUTH_USER_MODEL = 'main.CustomUser'
+
 STATIC_URL = '/static/'
-# 정적파일 경로 지정 ( 실제 경로 )
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
-# 경로 모든 파일을 웹서버가 직접 제공하기 위함
-# staticfiles 디렉터리로 지정 / 모든 정적 파일들 복사
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-# media file 
 MEDIA_URL = '/media/'
-
-MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
+MEDIA_ROOT = os.path.join(BASE_DIR,'media')
