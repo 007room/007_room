@@ -3,7 +3,6 @@ from django.utils import timezone
 from django.db import models
 from multiselectfield import MultiSelectField
 from hitcount.models import HitCountMixin
-
 from django.contrib.auth.models import AbstractUser
 #from array_field_select.fields import ArrayField
 Location_list =(
