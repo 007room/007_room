@@ -8,11 +8,11 @@
 <body>
     <!-- 정렬기능 셀렉트 박스-->
     <select id="sort-select" onchange="location = this.value;">
-    <option class="sort-date" value="/">최신순</option>
-    <option class="sort-likes" value="?sort=likes">좋아요순</option>
-    {% if user.is_authenticated %}
-    <option class="sort-mypost" value="?sort=mypost">내가쓴글</option>
-    {% endif %}
+        <option class="sort-date" value="/">최신순</option>
+        <option class="sort-likes" value="?sort=likes">좋아요순</option>
+        {% if user.is_authenticated %}
+        <option class="sort-mypost" value="?sort=mypost">내가쓴글</option>
+        {% endif %}
     </select>
 
 
@@ -28,9 +28,11 @@
     {% elif search_word %} <!-- 검색 결과가 없으면-->
         "{{ search_word }}" 검색 결과 없음.
     {% endif %}
+    
     <!--글 가져오기--><br><br>
     {% for post in post_list %}     
         <a href="">{{post.title}} | {{post.user}}</a><br>
     {% endfor %}
 </body>
 </html>
+
