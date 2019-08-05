@@ -75,24 +75,6 @@ class QnaCreateView(ReviewCreateView):
         return HttpResponseRedirect(reverse('post:detail', kwargs={'pk':parent_link.pk}))
 
       
-      #taemi
-      
-
-# #create
-# def post_new(request):
-    
-#     if request.method == 'POST':
-#         form = PostForm(request.POST, request.FILES)
-#         if form.is_valid():
-#             post = form.save(commit = False)
-#             post.user = request.user
-#             # post.Modified_date = request.META['Modified_date']
-#             post.save()
-#             return redirect('post:PostDetailView')
-#     else:
-#         form = PostForm()
-#     return render(request, 'post/post_new.html',{'form':form,})
-
 
 class PostCreateView(CreateView):
     model = Post
@@ -107,5 +89,5 @@ class PostCreateView(CreateView):
         new_post.user = self.request.user
 
         new_post.save()
-        return HttpRfesponseRedirect(reverse('main:list', ))
+        return HttpResponseRedirect(reverse('main:list', ))
         
