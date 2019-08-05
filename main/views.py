@@ -104,3 +104,16 @@ class SearchFormView(FormView):
         context['search_word'] = word # 검색어를 컨텍스트 변수에 담는다
         context['form'] = form_class
         return render(self.request, 'main/list.html', context)
+#create
+def post_new(request):
+    
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES)
+        if form.is_valid():
+            post = form.save(commit = False)
+            # post.Modified_date = request.META['Modified_date']
+            post.save()
+            return redirect('post:IndexView')
+    else:
+        form = PostForm()
+    return render(request, 'post/post_new.html',{'form':form,})
