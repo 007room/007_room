@@ -10,19 +10,21 @@
 {% endfor %}
 <br>
 <p>
-    <form action = "{% url "main:new_review" %}?post_pk={{object.pk}}" method="post" enctype="multipart/form-data>
+    <form action = "{% url "post:new_review" %}?post_pk={{object.pk}}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{comment_form}}
         {{image_formset}}
-        <input type="submit">
+        <input type="submit"> 
     </form>
 
 
-    <form action = "{% url "main:new_qna" %}?post_pk={{object.pk}}" method="post">
+    <form action = "{% url "post:new_qna" %}?post_pk={{object.pk}}" method="post">
         {% csrf_token %}
         {{qna_form}}
         <input type="submit">
     </form>
+
+
 </p> 
 
 
