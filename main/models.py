@@ -91,6 +91,7 @@ class Review(models.Model):
     post = models.ForeignKey(Post, default=None, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    confirm = models.BooleanField(default=False)
     text = models.TextField(null=True)
 
     def __str__(self):
@@ -102,7 +103,6 @@ class Qna(models.Model):
     user = models.ForeignKey(CustomUser, default=None, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    confirm = models.BooleanField(default=False)
     context = models.TextField()
 
     def __str__(self):
@@ -162,6 +162,7 @@ class Review_like(Like):
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, default=None, on_delete=models.CASCADE)
+    qna = models.ForeignKey(Qna, default=None, on_delete=models.CASCADE)
     context = models.TextField()
 
     def __str__(self):
