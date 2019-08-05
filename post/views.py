@@ -84,10 +84,7 @@ class PostCreateView(CreateView):
     def form_valid(self, form):
         
         new_post = form.save(commit=False)
-        # new_comment.post = self.request.GET['post_pk']
-
         new_post.user = self.request.user
-
         new_post.save()
         return HttpResponseRedirect(reverse('main:list', ))
         
