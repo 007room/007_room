@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <title> 글 리스트 </title>
+</head>
+<body>
+    <!-- 정렬기능 셀렉트 박스-->
+    <select id="sort-select" onchange="location = this.value;">
+    <option class="sort-date" value="/">최신순</option>
+    <option class="sort-likes" value="?sort=likes">좋아요순</option>
+    {% if user.is_authenticated %}
+    <option class="sort-mypost" value="?sort=mypost">내가쓴글</option>
+    {% endif %}
+    </select>
+
+
+    <!-- 검색 -->
+    <form action="." method="post"> {% csrf_token %}
+        {{ form.as_p }}
+        <input type = "submit">
+    </form>
+    {% if object_list %}<!-- 검색 결과가 있다면-->
+        {% for post in object_list %}<br>
+        <a href=""> {{ post.title }}</a>
+        {% endfor %}
+    {% elif search_word %} <!-- 검색 결과가 없으면-->
+        "{{ search_word }}" 검색 결과 없음.
+    {% endif %}
+    <!--글 가져오기--><br><br>
+    {% for post in post_list %}     
+        <a href="">{{post.title}} | {{post.user}}</a><br>
+    {% endfor %}
+</body>
+</html>

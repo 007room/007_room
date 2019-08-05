@@ -1,0 +1,30 @@
+{% load hitcount_tags %}
+
+<h1>{{object.title}}</h1>
+<h1>{{object.context}}</h1>
+<h1>조회수: {% get_hit_count for object %}</h1>
+
+
+{% for image in object.post_image_set.all %}
+    <img src="{{image.images.url}}" height="300" width="300">
+{% endfor %}
+<br>
+<p>
+    <form action = "{% url "main:new_review" %}?post_pk={{object.pk}}" method="post" enctype="multipart/form-data>
+        {% csrf_token %}
+        {{comment_form}}
+        {{image_formset}}
+        <input type="submit">
+    </form>
+
+
+    <form action = "{% url "main:new_qna" %}?post_pk={{object.pk}}" method="post">
+        {% csrf_token %}
+        {{qna_form}}
+        <input type="submit">
+    </form>
+</p> 
+
+
+
+
