@@ -79,7 +79,7 @@ class QnaCreateView(ReviewCreateView):
         return HttpResponseRedirect(reverse('main:detail', kwargs={'pk':parent_link.pk}))
 
       
-      #taemi
+#taemi
       
 class ListView(ListView):
     template_name = 'main/list.html'
@@ -103,6 +103,8 @@ class SearchFormView(FormView):
         context['search_word'] = word # 검색어를 컨텍스트 변수에 담는다
         context['form'] = form_class
         return render(self.request, 'main/list.html', context)
+
+# 미선
 #create
 def post_new(request):
     

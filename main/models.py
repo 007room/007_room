@@ -4,7 +4,9 @@ from django.db import models
 from multiselectfield import MultiSelectField
 from hitcount.models import HitCountMixin
 from django.contrib.auth.models import AbstractUser
+
 #from array_field_select.fields import ArrayField
+
 Location_list =(
         ('서울특별시','서울특별시'),
         ('부산광역시','부산광역시'),
