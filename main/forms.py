@@ -1,4 +1,5 @@
 from django import forms
+
 from .models import Post, Review, Qna, Review_image
 
 
@@ -42,4 +43,6 @@ ImageFormSet = forms.inlineformset_factory(Review, Review_image, form=ImageForm,
         
     
     
-
+#원래 (forms) 인데 오류나서 고쳐봄
+class SearchForm(forms.Form):
+    word = forms.CharField(label='Search Word')
