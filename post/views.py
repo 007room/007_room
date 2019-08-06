@@ -1,10 +1,11 @@
 from main.models import Post, Review, Qna, Review_image
+from .forms import ReviewForm, QnaForm, ImageFormSet,PostForm
 from django.shortcuts import render, get_object_or_404, redirect, reverse
-from django.views.generic import DetailView, CreateView
+from django.views.generic import DetailView, CreateView, DeleteView
+from django.urls import reverse_lazy
 from django.http.response import HttpResponseRedirect
 from hitcount.views import HitCountDetailView
-from .forms import ReviewForm, QnaForm, ImageFormSet,PostForm
-# taemi
+
 
 
 # Create your views here.
@@ -20,6 +21,24 @@ class PostDetailView(HitCountDetailView):
         ctx['image_formset'] = ImageFormSet()
  
         return ctx
+
+class PostCreateView(CreateView):
+    model = Post
+    template_name = 'post/post_new.html'
+    form_class = PostForm
+
+    def form_valid(self, form):
+        new_post = form.save(commit=False)
+        new_post.user = self.request.user
+        new_post.save()
+        return HttpResponseRedirect(reverse('main:list', ))
+        
+
+class PostDeleteView(DeleteView):
+    model = Post
+    template_name = 'post/delete.html'
+    success_url = reverse_lazy('main:list')
+
 
 class ReviewCreateView(CreateView):
     model = Review
@@ -62,50 +81,12 @@ class QnaCreateView(ReviewCreateView):
 
 
     def form_valid(self, form):
-        parent_link = Post.objects.get(pk = form.cleaned_data['post_pk'])
-        
+        parent_link = Post.objects.get(pk = form.cleaned_data['post_pk'])  
         new_qna = form.save(commit=False)
         # new_comment.post = self.request.GET['post_pk']
         new_qna.post = parent_link
         new_qna.user = self.request.user
-        
-
         new_qna.save()
-
         return HttpResponseRedirect(reverse('post:detail', kwargs={'pk':parent_link.pk}))
 
-      
-      #taemi
-      
 
-# #create
-# def post_new(request):
-    
-#     if request.method == 'POST':
-#         form = PostForm(request.POST, request.FILES)
-#         if form.is_valid():
-#             post = form.save(commit = False)
-#             post.user = request.user
-#             # post.Modified_date = request.META['Modified_date']
-#             post.save()
-#             return redirect('post:PostDetailView')
-#     else:
-#         form = PostForm()
-#     return render(request, 'post/post_new.html',{'form':form,})
-
-
-class PostCreateView(CreateView):
-    model = Post
-    template_name = 'post/post_new.html'
-    form_class = PostForm
-
-    def form_valid(self, form):
-        
-        new_post = form.save(commit=False)
-        # new_comment.post = self.request.GET['post_pk']
-
-        new_post.user = self.request.user
-
-        new_post.save()
-        return HttpRfesponseRedirect(reverse('main:list', ))
-        

@@ -160,6 +160,7 @@ class Review_like(Like):
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, default=None, on_delete=models.CASCADE)
+    qna = models.ForeignKey(Qna, default=None, on_delete=models.CASCADE)
     context = models.TextField()
 
     def __str__(self):
