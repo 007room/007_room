@@ -89,4 +89,21 @@ class QnaCreateView(ReviewCreateView):
         new_qna.save()
         return HttpResponseRedirect(reverse('post:detail', kwargs={'pk':parent_link.pk}))
 
+<<<<<<< HEAD
 
+=======
+      
+
+class PostCreateView(CreateView):
+    model = Post
+    template_name = 'post/post_new.html'
+    form_class = PostForm
+
+    def form_valid(self, form):
+        
+        new_post = form.save(commit=False)
+        new_post.user = self.request.user
+        new_post.save()
+        return HttpResponseRedirect(reverse('main:list', ))
+        
+>>>>>>> ff4caf512cd0843ee14499efda0ee0aa3a11039d
