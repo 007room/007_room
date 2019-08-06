@@ -1,3 +1,7 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+
 {% load hitcount_tags %}
 
 <h1>{{object.title}}</h1>
@@ -30,3 +34,4 @@
 
 
 
+{% endblock %}

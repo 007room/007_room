@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils import timezone
-from django.db import models
 from multiselectfield import MultiSelectField
 from hitcount.models import HitCountMixin
 from django.contrib.auth.models import AbstractUser
@@ -65,13 +64,14 @@ class Post(models.Model,HitCountMixin):
     title = models.CharField(max_length=50)
     context = models.TextField()
     user = models.ForeignKey(CustomUser, default=None, on_delete=models.CASCADE)
-    choose_date = models.DurationField() #!!!!!!! 일정 기간을 저장하는 필드를 만들기    
+    choose_date = models.DateTimeField() #!!!!!!! 일정 기간을 저장하는 필드를 만들기    
     '''지역 선택'''
     #location = ArrayField( models.CharField(choices=Location_list, max_length=30, default=default_city))
     location = models.CharField(choices=Location_list, max_length=50, blank=True)
     '''공간 유형 선택'''
     category = MultiSelectField(choices=Category_list, max_length=50, blank=True)
     etc_what = models.CharField(max_length=50, null=True,blank=True)
+    price = models.IntegerField()
     '''물건 대여 선택'''
     Option = MultiSelectField(choices=Option_list, max_length=50,default=False, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)  # 글 작성 시간 :  시간이 있는 날짜를 저장하는 datetime 필드를 만들기 
