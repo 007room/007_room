@@ -47,7 +47,7 @@
             <ul class="pagination">
             {% if page_obj.has_previous %}
                 <li>
-                <a href="?page={{ page_obj.previous_page_number }}">
+                <a href="?sort={{sort}}&page={{ page_obj.previous_page_number }}">
                     <span>Prev</span>
                 </a>
                 </li>
@@ -61,7 +61,7 @@
 
             {% for page in page_range %}
                 <li {% if page == page_obj.number %}class="active"{% endif %}>
-                <a href="?page={{ page }}">{{ page }}</a>
+                <a href="?sort={{sort}}&page={{ page }}">{{ page }}</a>
                 </li>
             {% endfor %}
 

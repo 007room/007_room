@@ -16,46 +16,68 @@ class List(ListView):
     ordering = ['-created_date']           # 기본 값
     paginate_by = 2  # Display 10 objects per page
 
+    # 정렬
+    # def sort_list(self):
+    #     sort = self.request.GET.get('sort','')
+    #     if sort == 'new' :
+    #         # self.ordering = ['created_date']
+    #         posts = Post.objects.order_by('-created_date')
+    #         return render(self.request, 'main/list.html', {'object_list': posts})
+    #     elif sort == 'likes':
+    #         # 좋아요 정렬
+    #         return 
+    #     elif sort == 'review':
+    #         # 후기 정렬
+    #         return 
+    #     elif sort == 'price_up':
+    #         # 가격(오름차순)
+    #         return 
+    #     elif sort == 'price_down':
+    #         # 가격(내림차순)
+    #         return 
+
 # 페이지네이션
     def get_context_data(self, **kwargs):
         context = super(ListView, self).get_context_data(**kwargs)
+        sort = self.request.GET.get('sort','')
+        context['sort'] = sort
         paginator = context['paginator']
         page_numbers_range = 5  # Display only 5 page numbers
         max_index = len(paginator.page_range)
 
         page = self.request.GET.get('page')
         current_page = int(page) if page else 1
-
         start_index = int((current_page - 1) / page_numbers_range) * page_numbers_range
         end_index = start_index + page_numbers_range
         if end_index >= max_index:
             end_index = max_index
-
         page_range = paginator.page_range[start_index:end_index]
         context['page_range'] = page_range
-        return context
 
-
-
-# 정렬
-    def sort_list(self):
-        sort = self.request.GET.get('sort','')
         if sort == 'new' :
+            print('들어옴')
             # self.ordering = ['created_date']
             posts = Post.objects.order_by('-created_date')
-            return render(self.request, 'main/list.html', {'object_list': posts})
+            context['object_list'] = posts[current_page*2-1: current_page*2+1]
+            # return render(self.request, 'main/list.html', {'object_list': posts})
         elif sort == 'likes':
             # 좋아요 정렬
-            return 
+            pass
         elif sort == 'review':
             # 후기 정렬
-            return 
+            pass
         elif sort == 'price_up':
             # 가격(오름차순)
-            return 
+            pass
         elif sort == 'price_down':
             # 가격(내림차순)
-            return 
+            pass
+
+        return context
+
+        
+
+
 
 
 class SearchView(FormView):
