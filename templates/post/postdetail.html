@@ -9,11 +9,15 @@
     <img src="{{image.images.url}}" height="300" width="300">
 {% endfor %}
 <br>
+<a href="">qna</a>
 <p>
     <form action = "{% url "post:new_review" %}?post_pk={{object.pk}}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{comment_form}}
-        {{image_formset}}
+        {{ image_formset.management_form }}
+            {% for form in image_formset %}
+            {{ form }}
+            {% endfor %}
         <input type="submit"> 
     </form>
 
@@ -24,7 +28,7 @@
         <input type="submit">
     </form>
 
-
+    
 </p> 
 
 

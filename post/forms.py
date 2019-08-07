@@ -2,7 +2,7 @@ from django import forms
 
 from main.models import Post, Review, Qna, Review_image
 
-
+ 
 class ReviewForm(forms.ModelForm):
     post_pk = forms.IntegerField(widget=forms.HiddenInput)
     
@@ -35,12 +35,13 @@ class QnaForm(ReviewForm):
 
 class ImageForm(forms.ModelForm):
     review_pk = forms.IntegerField(widget=forms.HiddenInput)
+    # images = forms.ImageField( widget=forms.FileInput)
     class Meta:
         model = Review_image
         fields = ['images',]
 
-ImageFormSet = forms.inlineformset_factory(Review, Review_image, form=ImageForm, extra=2)
-        
+# ImageFormSet = forms.inlineformset_factory(Review, Review_image, form=ImageForm, extra=2)
+
 
 class PostForm(forms.ModelForm):
 
