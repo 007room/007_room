@@ -16,25 +16,6 @@ class List(ListView):
     ordering = ['-created_date']           # 기본 값
     paginate_by = 2  # Display 10 objects per page
 
-    # 정렬
-    # def sort_list(self):
-    #     sort = self.request.GET.get('sort','')
-    #     if sort == 'new' :
-    #         # self.ordering = ['created_date']
-    #         posts = Post.objects.order_by('-created_date')
-    #         return render(self.request, 'main/list.html', {'object_list': posts})
-    #     elif sort == 'likes':
-    #         # 좋아요 정렬
-    #         return 
-    #     elif sort == 'review':
-    #         # 후기 정렬
-    #         return 
-    #     elif sort == 'price_up':
-    #         # 가격(오름차순)
-    #         return 
-    #     elif sort == 'price_down':
-    #         # 가격(내림차순)
-    #         return 
 
 # 페이지네이션
     def get_context_data(self, **kwargs):
@@ -74,10 +55,6 @@ class List(ListView):
             pass
 
         return context
-
-        
-
-
 
 
 class SearchView(FormView):

@@ -49,10 +49,6 @@ class ImageForm(forms.ModelForm):
         model = Review_image
         fields = ['images',]
 
-<<<<<<< HEAD
-# ImageFormSet = forms.inlineformset_factory(Review, Review_image, form=ImageForm, extra=2)
-
-=======
 ImageFormSet = forms.inlineformset_factory(Review, Review_image, form=ImageForm, extra=2)
         
      
@@ -70,7 +66,6 @@ ImageFormSet = forms.inlineformset_factory(Review, Review_image, form=ImageForm,
 
 class MyDatePickerInput(DateTimePickerInput):
     template_name = 'my_app/date-picker.html'
->>>>>>> be3ef30cdf188d674fdfd52eea83798920db3d45
 
 class PostForm(forms.ModelForm):
 
