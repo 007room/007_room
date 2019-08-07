@@ -34,33 +34,35 @@ class List(ListView):
         page_range = paginator.page_range[start_index:end_index]
         context['page_range'] = page_range
 
-        if sort == 'new' :
-            print('들어옴')
-            # self.ordering = ['created_date']
+        if sort == 'new' :       # 최신순
             posts = Post.objects.order_by('-created_date')
             context['object_list'] = posts[current_page*2-2: current_page*2]
-        elif sort == 'likes':
-            # 좋아요 정렬
-            pass
-        elif sort == 'review':
+        elif sort == 'likes':        # 좋아요
             order = {}
             posts = Post.objects.all()
             for post in posts :
-                order[post] = post.reviews.count
-            data = sorted(order.items(), key=operator.itemgetter(1))
-            context['object_list'] = data[current_page*2-2: current_page*2]
-            
-            # sorted(order, key=lambda k : order[k], reverse=True)
-            # res = sorted(order.items(), key=(lambda x: x[1]), reverse = True)
-            # context['object_list'] = res[current_page*2-2: current_page*2]
-            # context['object_list'] = posts[current_page*2-2: current_page*2]
-            pass
-        elif sort == 'price_up':
-            # 가격(오름차순)
-            pass
-        elif sort == 'price_down':
-            # 가격(내림차순)
-            pass
+                order[post] = post.post_likes.count()
+            data = sorted(order.items(), key=operator.itemgetter(1), reverse=True)
+            data_list = []
+            for i in data:
+                data_list.append(i[0])
+            context['object_list'] = data_list[current_page*2-2: current_page*2]
+        elif sort == 'review':      # 리뷰수
+            order = {}
+            posts = Post.objects.all()
+            for post in posts :
+                order[post] = post.reviews.count()
+            data = sorted(order.items(), key=operator.itemgetter(1), reverse=True)
+            data_list = []
+            for i in data:
+                data_list.append(i[0])
+            context['object_list'] = data_list[current_page*2-2: current_page*2]
+        elif sort == 'price_up':     # 가격 (오름차순)
+            posts = Post.objects.order_by('price')
+            context['object_list'] = posts[current_page*2-2: current_page*2]
+        elif sort == 'price_down':  # 가격 ( 내림차순 )
+            posts = Post.objects.order_by('-price')
+            context['object_list'] = posts[current_page*2-2: current_page*2]
 
         return context
 

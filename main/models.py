@@ -160,7 +160,7 @@ class Like(models.Model):
 
 
 class Post_like(Like):
-    post = models.ForeignKey(Post, default=None, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, default=None, on_delete=models.CASCADE, related_name = 'post_likes')
 
 
 class Review_like(Like):
