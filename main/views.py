@@ -5,9 +5,8 @@ from django.views.generic.edit import FormView
 from django.db.models import Q
 from .forms import SearchForm
 from .models import Post
+import operator
 
-
-#taemi
 
 class List(ListView):
     template_name = 'main/list.html'
@@ -39,13 +38,22 @@ class List(ListView):
             print('들어옴')
             # self.ordering = ['created_date']
             posts = Post.objects.order_by('-created_date')
-            context['object_list'] = posts[current_page*2-1: current_page*2+1]
-            # return render(self.request, 'main/list.html', {'object_list': posts})
+            context['object_list'] = posts[current_page*2-2: current_page*2]
         elif sort == 'likes':
             # 좋아요 정렬
             pass
         elif sort == 'review':
-            # 후기 정렬
+            order = {}
+            posts = Post.objects.all()
+            for post in posts :
+                order[post] = post.reviews.count
+            data = sorted(order.items(), key=operator.itemgetter(1))
+            context['object_list'] = data[current_page*2-2: current_page*2]
+            
+            # sorted(order, key=lambda k : order[k], reverse=True)
+            # res = sorted(order.items(), key=(lambda x: x[1]), reverse = True)
+            # context['object_list'] = res[current_page*2-2: current_page*2]
+            # context['object_list'] = posts[current_page*2-2: current_page*2]
             pass
         elif sort == 'price_up':
             # 가격(오름차순)

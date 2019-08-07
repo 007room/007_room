@@ -89,11 +89,12 @@ class Post(models.Model,HitCountMixin):
     def ROOM_TYPE(self):
         if self.category=='etc' :
             return "ROOM etc :{}".format(self.etc_what) 
+
     
 
 class Review(models.Model):
     user = models.ForeignKey(CustomUser, default=None, on_delete=models.CASCADE)
-    post = models.ForeignKey(Post, default=None, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, default=None, on_delete=models.CASCADE, related_name = 'reviews')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     confirm = models.BooleanField(default=False)
