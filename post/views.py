@@ -1,7 +1,7 @@
 from main.models import Post, Review, Qna, Review_image
-from .forms import ReviewForm, QnaForm, ImageFormSet,PostForm,DateInput
+from .forms import ReviewForm, QnaForm, ImageFormSet,PostForm
 from django.shortcuts import render, get_object_or_404, redirect, reverse
-from django.views.generic import DetailView, CreateView, DeleteView
+from django.views.generic import DetailView, CreateView, DeleteView,UpdateView
 from django.urls import reverse_lazy
 from django.http.response import HttpResponseRedirect
 from hitcount.views import HitCountDetailView
@@ -26,14 +26,23 @@ class PostCreateView(CreateView):
     model = Post
     template_name = 'post/post_new.html'
     form_class = PostForm
+    
+    def get_form(self):
+        form = super().get_form()
+        form.fields['choose_date'].widget = DateTimePickerInput()
+        return form
 
     def form_valid(self, form):
         new_post = form.save(commit=False)
         new_post.user = self.request.user
-        new_post.cleaned_data['choose_date'].widget = DateTimePickerInput()
+        new_post.choose_date.widget = DateTimePickerInput()
         new_post.save()
         return HttpResponseRedirect(reverse('main:list', ))
         
+class PostUpdateView(UpdateView): 
+    model = Post
+    template_name = 'post/update.html'
+    success_url = reverse_lazy('main:list')
 
 class PostDeleteView(DeleteView):
     model = Post

@@ -6,6 +6,8 @@
     <title> 글 리스트 </title>
 </head>
 <body>
+{% extends 'base.html' %}
+{% block content %}
     <!-- 정렬기능 셀렉트 박스-->
     <select id="sort-select" onchange="location = this.value;">
     <option class="sort-date" value="/">최신순</option>
@@ -28,13 +30,29 @@
     {% elif search_word %} <!-- 검색 결과가 없으면-->
         "{{ search_word }}" 검색 결과 없음.
     {% endif %}
-    <!--글 가져오기--><br><br>
-    {% for post in post_list %}     
-    <a href="{% url 'post:detail' post.id %}">{{post.title}} | {{post.user}}</a><br>
-    <a href ="{% url 'post:detail' post.id %}"> 삭제하기 </a>
-    {% endfor %}
-   
 
+    <div>
+        <a href ="{% url 'post:post_new'%}"> 글쓰기 </a>
+    </div>
+  
+    <!--글 가져오기-->
+    {% for post in post_list %}
+    <table>  
+    
+    <tr>
+        <td>{{post.id}}</td>
+        <td>{{post.title}}</td>
+        <td>{{post.user}}</td>
+        <td>
+            <a href="{% url 'post:detail' post.id %}">더 보기</a>
+            <a href="{% url 'post:edit'  post.id  %}">수정하기</a>
+            <a href ="{% url 'post:delete' post.id %}"> 삭제하기 </a> 
+        </td>
+    </tr> 
+    </table>
+    {% endfor %}
+    
+{% endblock %}
 
 </body>
 </html>

@@ -10,9 +10,6 @@ class ListView(ListView):
     context_object_name = 'post_list'
     model = Post
     
-    
-
-
 # 검색 
 class SearchFormView(FormView):
     form_class = SearchForm
