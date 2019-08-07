@@ -31,12 +31,9 @@
     <!--글 가져오기--><br><br>
     {% for post in post_list %}     
     <a href="{% url 'post:detail' post.id %}">{{post.title}} | {{post.user}}</a><br>
+    <a href ="{% url 'post:detail' post.id %}"> 삭제하기 </a>
     {% endfor %}
-    '''삭제하기'''
-    <form method="post">{% csrf_token %}
-        <p>Are you sure you want to delete "{{ object }}"?</p>
-        <input type="submit" value="Confirm">
-    </form>
+   
 
 
 </body>

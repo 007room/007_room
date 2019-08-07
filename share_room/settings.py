@@ -43,6 +43,10 @@ INSTALLED_APPS = [
     'guest',
     'post',
     'hitcount',
+    'multiselectfield',
+    'crispy_forms',#Django 양식을 bootstap 4와 렌더링하기
+    "bootstrap4",
+    'bootstrap_datepicker_plus',
 ]
 
 MIDDLEWARE = [
@@ -142,3 +146,4 @@ AUTH_USER_MODEL = 'main.CustomUser'
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
