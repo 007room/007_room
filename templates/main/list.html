@@ -2,39 +2,87 @@
 
 <html lang="ko">
 <head>
+    <!-- 합쳐지고 최소화된 최신 CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+    <!-- 부가적인 테마 -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+
+    <!-- 합쳐지고 최소화된 최신 자바스크립트 -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
     <meta charset="utf-8">
     <title> 글 리스트 </title>
 </head>
 <body>
+    <a href= "{% url "main:list" %}">홈으로 </a><br><br>
+    <a href=" {% url "main:search" %} "> 검색하러 가기</a><br><br>
+
     <!-- 정렬기능 셀렉트 박스-->
     <select id="sort-select" onchange="location = this.value;">
-    <option class="sort-date" value="/">최신순</option>
-    <option class="sort-likes" value="?sort=likes">좋아요순</option>
-    {% if user.is_authenticated %}
-    <option class="sort-mypost" value="?sort=mypost">내가쓴글</option>
-    {% endif %}
+        <option value="">정렬기준</option>  <!-- 선택 안 되게끔 하기-->
+        <option value="?sort=new" href="{% url 'main:list'%}">최신</option>
+        <option value="?sort=likes">좋아요</option>
+        <option value="?sort=review">후기</option>
+        <option value="?sort=price_up">가격(오름차순)</option>
+        <option value="?sort=price_down">가격(내림차순)</option>
     </select>
 
-
-    <!-- 검색 -->
-    <form action="." method="post"> {% csrf_token %}
-        {{ form.as_p }}
-        <input type = "submit">
-    </form>
-    {% if object_list %}<!-- 검색 결과가 있다면-->
-        {% for post in object_list %}<br>
-        <a href=""> {{ post.title }}</a>
-        {% endfor %}
-    {% elif search_word %} <!-- 검색 결과가 없으면-->
-        "{{ search_word }}" 검색 결과 없음.
-    {% endif %}
+   
+    
     <!--글 가져오기--><br><br>
-    {% for post in post_list %}     
+
+    {% if object_list %}
+    {% for post in object_list  %}
     <a href="{% url 'post:detail' post.id %}">{{post.title}} | {{post.user}}</a><br>
     <a href ="{% url 'post:detail' post.id %}"> 삭제하기 </a>
     {% endfor %}
-   
+    {% else %}
+    <p>글이 없습니다.</p>
+    {% endif %}
 
+    <!-- templates/students/list.html -->
+
+{# Pagination #}
+    {% if is_paginated %}
+        <nav>
+            <ul class="pagination">
+            {% if page_obj.has_previous %}
+                <li>
+                <a href="?sort={{sort}}&page={{ page_obj.previous_page_number }}">
+                    <span>Prev</span>
+                </a>
+                </li>
+            {% else %}
+                <li class="disabled">
+                <a href="#">
+                    <span>Prev</span>
+                </a>
+                </li>
+            {% endif %}
+
+            {% for page in page_range %}
+                <li {% if page == page_obj.number %}class="active"{% endif %}>
+                <a href="?sort={{sort}}&page={{ page }}">{{ page }}</a>
+                </li>
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <li>
+                <a href="?page={{ page_obj.next_page_number }}">
+                    <span>Next</span>
+                </a>
+                </li>
+            {% else %}
+                <li {% if not page_obj.has_next %}class="disabled"{% endif %}>
+                <a href="#">
+                    <span>Next</span>
+                </a>
+                </li>
+            {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
 
 </body>
 </html>
+

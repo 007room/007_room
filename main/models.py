@@ -3,7 +3,9 @@ from django.utils import timezone
 from multiselectfield import MultiSelectField
 from hitcount.models import HitCountMixin
 from django.contrib.auth.models import AbstractUser
+
 #from array_field_select.fields import ArrayField
+
 Location_list =(
         ('서울특별시','서울특별시'),
         ('부산광역시','부산광역시'),
@@ -83,6 +85,8 @@ class Post(models.Model,HitCountMixin):
     def ROOM_TYPE(self):
         if self.category=='etc' :
             return "ROOM etc :{}".format(self.etc_what) 
+
+
 
 class Review(models.Model):
     user = models.ForeignKey(CustomUser, default=None, on_delete=models.CASCADE)
