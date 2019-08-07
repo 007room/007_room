@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+<head>
+    <!-- 합쳐지고 최소화된 최신 CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+    <!-- 부가적인 테마 -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+
+    <!-- 합쳐지고 최소화된 최신 자바스크립트 -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <meta charset="utf-8">
+    <title> 글 리스트 </title>
+</head>
+<body>
+검색하기<br><br>
+<a href="{% url "main:list" %}">홈으로</a>
+   <!-- 검색 -->
+    <form action="." method="post"> {% csrf_token %}
+        {{ form.as_p }}
+        <input type = "submit">
+    </form>
+    {% if object_list %}<!-- 검색 결과가 있다면-->
+        {% for post in object_list %}<br>
+        <a href=""> {{post.title}} | {{post.user}}</a>
+        {% endfor %}
+    {% elif search_word %} <!-- 검색 결과가 없으면-->
+        "{{ search_word }}" 검색 결과 없음.
+    {% else %}
+        <p> # 검색어 추천 </p>
+    {% endif %}<br><br><br>
+</body>

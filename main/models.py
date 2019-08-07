@@ -86,6 +86,8 @@ class Post(models.Model,HitCountMixin):
         if self.category=='etc' :
             return "ROOM etc :{}".format(self.etc_what) 
 
+
+
 class Review(models.Model):
     user = models.ForeignKey(CustomUser, default=None, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, default=None, on_delete=models.CASCADE)
