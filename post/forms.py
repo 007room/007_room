@@ -44,9 +44,12 @@ class QnaForm(ReviewForm):
 
 class ImageForm(forms.ModelForm):
     review_pk = forms.IntegerField(widget=forms.HiddenInput)
+    # images = forms.ImageField( widget=forms.FileInput)
     class Meta:
         model = Review_image
         fields = ['images',]
+
+
 
 ImageFormSet = forms.inlineformset_factory(Review, Review_image, form=ImageForm, extra=2)
         
@@ -66,7 +69,6 @@ ImageFormSet = forms.inlineformset_factory(Review, Review_image, form=ImageForm,
 
 class MyDatePickerInput(DateTimePickerInput):
     template_name = 'post/datetimepicker.html'
-
 
 class PostForm(forms.ModelForm):
 

@@ -3,7 +3,9 @@ from django.utils import timezone
 from multiselectfield import MultiSelectField
 from hitcount.models import HitCountMixin
 from django.contrib.auth.models import AbstractUser
+
 #from array_field_select.fields import ArrayField
+
 Location_list =(
         ('서울특별시','서울특별시'),
         ('부산광역시','부산광역시'),
@@ -91,11 +93,14 @@ class Post(models.Model,HitCountMixin):
             return "ROOM etc :{}".format(self.etc_what) 
     
 
+
+
 class Review(models.Model):
     user = models.ForeignKey(CustomUser, default=None, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, default=None, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    confirm = models.BooleanField(default=False)
     text = models.TextField(null=True)
 
     def __str__(self):
@@ -107,8 +112,8 @@ class Qna(models.Model):
     user = models.ForeignKey(CustomUser, default=None, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    confirm = models.BooleanField(default=False)
     context = models.TextField()
+    
 
     def __str__(self):
         return "{}".format(self.context)
@@ -172,3 +177,5 @@ class Comment(models.Model):
 
     def __str__(self):
         return "{}".format(self.context)
+
+

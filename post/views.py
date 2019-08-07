@@ -5,8 +5,11 @@ from django.views.generic import DetailView, CreateView, DeleteView,UpdateView
 from django.urls import reverse_lazy
 from django.http.response import HttpResponseRedirect
 from hitcount.views import HitCountDetailView
-from bootstrap_datepicker_plus import DateTimePickerInput
+from .forms import ReviewForm, QnaForm, ImageForm, PostForm
+from django.forms import modelformset_factory
+# taemi
 
+ImageFormSet = modelformset_factory(Review_image, form=ImageForm, extra=1, min_num=1)
 
 # Create your views here.
 class PostDetailView(HitCountDetailView):
@@ -18,9 +21,11 @@ class PostDetailView(HitCountDetailView):
         ctx =  super(PostDetailView, self).get_context_data(**kwargs)
         ctx['comment_form'] = ReviewForm(initial={'post_pk':self.object.pk})
         ctx['qna_form'] = QnaForm(initial={'post_pk':self.object.pk})
-        ctx['image_formset'] = ImageFormSet()
+        ctx['image_formset'] = ImageFormSet(queryset=Review_image.objects.none())
+    
  
         return ctx
+    
 
 class PostCreateView(CreateView):
     model = Post
@@ -59,20 +64,24 @@ class ReviewCreateView(CreateView):
         return super(ReviewCreateView, self).dispatch(*args, **kwargs)
 
     def form_valid(self, form):
+        # ImageFormSet = modelformset_factory(Review_image, form=ImageForm, extra=2)
         parent_link = Post.objects.get(pk = form.cleaned_data['post_pk'])
         new_review = form.save(commit=False)
         # new_comment.post = self.request.GET['post_pk']
         new_review.post = parent_link
         new_review.user = self.request.user
-
         new_review.save()
+        image_formset = ImageFormSet(self.request.POST, self.request.FILES,queryset=Review_image.objects.none())
+        # print('image_formset',image_formset)
+        for form in image_formset:
+            if form.is_valid():
+                print('에러에러')
+            else :
+                print(form,'\n')
+                image = form.cleaned_data['images']
+                photo = Review_image(review=new_review, images=image, user=self.request.user)
+                photo.save()
         
-        image_formset = ImageFormSet(self.POST, self.FILES)
-        for form in image_formset.cleaned_data:
-            image = form['images']
-            photo = Review_image(review=new_review, images=image)
-            photo.save()
-
         return HttpResponseRedirect(reverse('post:detail', kwargs={'pk':parent_link.pk}))
     
     def get_initial(self):
@@ -82,8 +91,8 @@ class ReviewCreateView(CreateView):
     def get_context_data(self, **kwargs):
         ctx =  super(ReviewCreateView, self).get_context_data(**kwargs)
         # ctx['comment_form'] = ReviewForm(initial={'post_pk':self.object.pk})
- 
-    #     return ctx
+    
+
 
 class QnaCreateView(ReviewCreateView):
     model = Qna
@@ -99,3 +108,27 @@ class QnaCreateView(ReviewCreateView):
         new_qna.save()
         return HttpResponseRedirect(reverse('post:detail', kwargs={'pk':parent_link.pk}))
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+
+=======
+      
+>>>>>>> 0ef0c1364c05301cb011a26aca76c030b0b6845c
+
+class PostCreateView(CreateView):
+    model = Post
+    template_name = 'post/post_new.html'
+    form_class = PostForm
+
+    def form_valid(self, form):
+        
+        new_post = form.save(commit=False)
+        new_post.user = self.request.user
+        new_post.save()
+        return HttpResponseRedirect(reverse('main:list', ))
+        
+>>>>>>> ff4caf512cd0843ee14499efda0ee0aa3a11039d
+=======
+>>>>>>> be3ef30cdf188d674fdfd52eea83798920db3d45
