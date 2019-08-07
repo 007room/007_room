@@ -99,14 +99,6 @@ class QnaCreateView(ReviewCreateView):
         new_qna.save()
         return HttpResponseRedirect(reverse('post:detail', kwargs={'pk':parent_link.pk}))
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-
-=======
-      
->>>>>>> 0ef0c1364c05301cb011a26aca76c030b0b6845c
 
 class PostCreateView(CreateView):
     model = Post
@@ -120,6 +112,4 @@ class PostCreateView(CreateView):
         new_post.save()
         return HttpResponseRedirect(reverse('main:list', ))
         
->>>>>>> ff4caf512cd0843ee14499efda0ee0aa3a11039d
-=======
->>>>>>> be3ef30cdf188d674fdfd52eea83798920db3d45
+
