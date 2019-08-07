@@ -1,6 +1,8 @@
 from main.models import Post, Review, Qna, Review_image
+from .forms import ReviewForm, QnaForm, ImageFormSet,PostForm
 from django.shortcuts import render, get_object_or_404, redirect, reverse
-from django.views.generic import DetailView, CreateView
+from django.views.generic import DetailView, CreateView, DeleteView
+from django.urls import reverse_lazy
 from django.http.response import HttpResponseRedirect
 from hitcount.views import HitCountDetailView
 from .forms import ReviewForm, QnaForm, ImageForm, PostForm
@@ -24,6 +26,24 @@ class PostDetailView(HitCountDetailView):
  
         return ctx
     
+
+class PostCreateView(CreateView):
+    model = Post
+    template_name = 'post/post_new.html'
+    form_class = PostForm
+
+    def form_valid(self, form):
+        new_post = form.save(commit=False)
+        new_post.user = self.request.user
+        new_post.save()
+        return HttpResponseRedirect(reverse('main:list', ))
+        
+
+class PostDeleteView(DeleteView):
+    model = Post
+    template_name = 'post/delete.html'
+    success_url = reverse_lazy('main:list')
+
 
 class ReviewCreateView(CreateView):
     model = Review
@@ -70,18 +90,21 @@ class QnaCreateView(ReviewCreateView):
 
 
     def form_valid(self, form):
-        parent_link = Post.objects.get(pk = form.cleaned_data['post_pk'])
-        
+        parent_link = Post.objects.get(pk = form.cleaned_data['post_pk'])  
         new_qna = form.save(commit=False)
         # new_comment.post = self.request.GET['post_pk']
         new_qna.post = parent_link
         new_qna.user = self.request.user
-        
-
         new_qna.save()
-
         return HttpResponseRedirect(reverse('post:detail', kwargs={'pk':parent_link.pk}))
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+
+=======
+      
+>>>>>>> 0ef0c1364c05301cb011a26aca76c030b0b6845c
 
 class PostCreateView(CreateView):
     model = Post
@@ -91,10 +114,8 @@ class PostCreateView(CreateView):
     def form_valid(self, form):
         
         new_post = form.save(commit=False)
-        # new_comment.post = self.request.GET['post_pk']
-
         new_post.user = self.request.user
-
         new_post.save()
-        return HttpRfesponseRedirect(reverse('main:list', ))
+        return HttpResponseRedirect(reverse('main:list', ))
         
+>>>>>>> ff4caf512cd0843ee14499efda0ee0aa3a11039d
