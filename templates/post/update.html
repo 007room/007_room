@@ -1,12 +1,9 @@
 {% extends 'base.html' %}
-{% load bootstrap4 %}
-{% bootstrap_css %}
-{% bootstrap_javascript %}
+{% load crispy_forms_tags %}  
+
+
 {% block content %}
-
-{{ form.media }}
-{% load crispy_forms_tags %} 
-
+<h1>Post Update</h1>
 <form action="" method='POST' enctype="multipart/form-data">
             {% csrf_token %}
                 {{ form.title|as_crispy_field }}
@@ -18,9 +15,9 @@
                       
                     </div>
             </div>
-                
                 {{ form.etc_what|as_crispy_field }}
-                {{ form.choose_date|as_crispy_field:"bootstrap"}}
+                {{ form.Option|as_crispy_field }}
+                {{ form.choose_date|as_crispy_field}}
                 {{ form.price|as_crispy_field }}
                 {{ form.context|as_crispy_field }}
 
@@ -29,4 +26,3 @@
 
 
 {% endblock %}
-

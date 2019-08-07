@@ -26,19 +26,26 @@ class CustomUser(AbstractUser):
     '''django 기존 User모델과 연동'''
     # REQUIRED_FIELDS = ('user',)
     # user = models.OneToOneField(User,unique=True, on_delete=models.CASCADE)
-
+    Gender_list =(
+        ('여자','여자'),
+        ('남자','남자'),
+        ('사용자지정','사용자지정'),
+    )
     email = models.EmailField()                       
     nickname = models.CharField(max_length=10)        
     area = models.CharField(choices=Location_list, max_length=50, blank=True)
     report_count = models.IntegerField(default=0)             #신고횟수
     podo = models.IntegerField(default=10)             # 초기10알
-    gender = models.BooleanField(default=False)    
+    gender = models.CharField(choices=Gender_list, max_length=50,default=False, blank=True)    
     profile_image = models.FileField(null=True, blank=True)
     #keywords = models.CharField()                      #보류
 
 
     def __str__(self):
         return "{}".format(self.email)
+
+    class Meta(AbstractUser.Meta):
+        swappable = 'AUTH_USER_MODEL'
 
 
 class Post(models.Model,HitCountMixin):
@@ -66,10 +73,9 @@ class Post(models.Model,HitCountMixin):
     title = models.CharField(max_length=50)
     context = models.TextField()
     user = models.ForeignKey(CustomUser, default=None, on_delete=models.CASCADE)
-    choose_date = models.DateTimeField() #!!!!!!! 일정 기간을 저장하는 필드를 만들기    
-    '''지역 선택'''
-    #location = ArrayField( models.CharField(choices=Location_list, max_length=30, default=default_city))
-    location = models.CharField(choices=Location_list, max_length=50, blank=True)
+    choose_date = models.DateTimeField() 
+    strat_date = models.DateTimeField() #!!!!!!! 일정 기간을 저장하는 필드를 만들기    
+    end_date = models.DateTimeField() 
     '''공간 유형 선택'''
     category = MultiSelectField(choices=Category_list, max_length=50, blank=True)
     etc_what = models.CharField(max_length=50, null=True,blank=True)
@@ -85,6 +91,7 @@ class Post(models.Model,HitCountMixin):
     def ROOM_TYPE(self):
         if self.category=='etc' :
             return "ROOM etc :{}".format(self.etc_what) 
+    
 
 
 

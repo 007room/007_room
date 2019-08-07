@@ -56,7 +56,6 @@ class List(ListView):
 
         return context
 
-
 class SearchView(FormView):
     template_name = 'main/search.html'
     form_class = SearchForm
