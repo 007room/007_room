@@ -34,6 +34,7 @@
     {% if object_list %}
     {% for post in object_list  %}
     <a href="{% url 'post:detail' post.id %}">{{post.title}} | {{post.user}}</a><br>
+    <a href ="{% url 'post:detail' post.id %}"> 삭제하기 </a>
     {% endfor %}
     {% else %}
     <p>글이 없습니다.</p>
@@ -81,6 +82,7 @@
             </ul>
         </nav>
     {% endif %}
+
 </body>
 </html>
 
