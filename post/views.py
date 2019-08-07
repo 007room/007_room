@@ -1,5 +1,5 @@
 from main.models import Post, Review, Qna, Review_image
-from .forms import ReviewForm, QnaForm, ImageFormSet,PostForm
+from .forms import ReviewForm, QnaForm, ImageFormSet,PostForm,DateInput
 from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.views.generic import DetailView, CreateView, DeleteView
 from django.urls import reverse_lazy
@@ -35,6 +35,7 @@ class PostCreateView(CreateView):
     def form_valid(self, form):
         new_post = form.save(commit=False)
         new_post.user = self.request.user
+        new_post.cleaned_data['choose_date'].widget = DateTimePickerInput()
         new_post.save()
         return HttpResponseRedirect(reverse('main:list', ))
         
@@ -99,6 +100,7 @@ class QnaCreateView(ReviewCreateView):
         return HttpResponseRedirect(reverse('post:detail', kwargs={'pk':parent_link.pk}))
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
 
@@ -119,3 +121,5 @@ class PostCreateView(CreateView):
         return HttpResponseRedirect(reverse('main:list', ))
         
 >>>>>>> ff4caf512cd0843ee14499efda0ee0aa3a11039d
+=======
+>>>>>>> be3ef30cdf188d674fdfd52eea83798920db3d45
