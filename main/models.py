@@ -86,11 +86,12 @@ class Post(models.Model,HitCountMixin):
     
     def ROOM_TYPE(self):
         if self.category=='etc' :
-            return "ROOM etc :{}".format(self.etc_what)
+
+            return "ROOM etc :{}".format(self.etc_what) 
 
 class Review(models.Model):
     user = models.ForeignKey(CustomUser, default=None, on_delete=models.CASCADE)
-    post = models.ForeignKey(Post, default=None, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, default=None, on_delete=models.CASCADE, related_name = 'reviews')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     confirm = models.BooleanField(default=False)
@@ -156,7 +157,7 @@ class Like(models.Model):
 
 
 class Post_like(Like):
-    post = models.ForeignKey(Post, default=None, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, default=None, on_delete=models.CASCADE, related_name = 'post_likes')
 
 
 class Review_like(Like):
@@ -172,3 +173,9 @@ class Comment(models.Model):
         return "{}".format(self.context)
 
 
+class Report(models.Model):
+    reporter_user = models.ForeignKey(CustomUser, default=None, on_delete=models.CASCADE)
+    reported_user = models.CharField(max_length=200)
+    reason = models.TextField()
+    image = models.FileField(null=True, blank=True)
+    post_url = models.CharField(max_length=500)

@@ -1,14 +1,14 @@
 from main.models import Post, Review, Qna, Review_image
-from .forms import ReviewForm, QnaForm, ImageFormSet,PostForm
+from .forms import ReviewForm, QnaForm, ImageFormSet,PostForm, ReportForm
 from django.shortcuts import render, get_object_or_404, redirect, reverse
-from django.views.generic import DetailView, CreateView, DeleteView,UpdateView
+from django.views.generic import DetailView, CreateView, DeleteView,UpdateView, FormView, View
 from django.urls import reverse_lazy
 from django.http.response import HttpResponseRedirect
 from hitcount.views import HitCountDetailView
-from .forms import ReviewForm, QnaForm, ImageForm, PostForm,MyDatePickerInput
+from .forms import ReviewForm, QnaForm, ImageForm, PostForm,MyDatePickerInput, ReportForm
 from django.forms import modelformset_factory
 from bootstrap_datepicker_plus import DateTimePickerInput
-# taemi
+
 
 ImageFormSet = modelformset_factory(Review_image, form=ImageForm, extra=1, min_num=1)
 
@@ -130,4 +130,14 @@ class PostCreateView(CreateView):
         new_post = form.save(commit=False)
         new_post.user = self.request.user
         new_post.save()
+        return HttpResponseRedirect(reverse('main:list', ))
+
+class ReportView(FormView):
+    template_name = 'post/report.html'
+    form_class = ReportForm
+    ordering = ['-created_date']           
+
+    def form_valid(self, form): #post method로 값이 전달되면
+        new_report = form.save(commit=False)
+        new_report.save()
         return HttpResponseRedirect(reverse('main:list', ))

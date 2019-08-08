@@ -11,34 +11,18 @@
     <!-- 합쳐지고 최소화된 최신 자바스크립트 -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
     <meta charset="utf-8">
-    <title> 글 리스트 </title>
+    <title> 구매 목록 </title>
 </head>
 <body>
-    {% extends 'base.html' %}
-    {% block content %}
+
     <a href= "{% url "main:list" %}">홈으로 </a><br><br>
-    <a href=" {% url "main:search" %} "> 검색하러 가기</a><br><br>
-    <a href=" {% url "main:myaccount" %} "> 계정관리</a><br><br>
 
-    <!-- 정렬기능 셀렉트 박스-->
-    <select id="sort-select" onchange="location = this.value;">
-        <option value="">정렬기준</option>  <!-- 선택 안 되게끔 하기-->
-        <option value="?sort=new" href="{% url 'main:list'%}">최신</option>
-        <option value="?sort=likes">좋아요</option>
-        <option value="?sort=review">후기</option>
-        <option value="?sort=price_up">가격(오름차순)</option>
-        <option value="?sort=price_down">가격(내림차순)</option>
-    </select>
-
-   
     <!--글 가져오기--><br><br>
 
     {% if object_list %}
     {% for post in object_list  %}
-
     <a href="{% url 'post:detail' post.id %}"> {{post.title}} | {{post.user}} | 후기 {{post.reviews.count}} 개</a>
     <a href ="{% url 'post:delete' post.id %}"> [삭제하기] </a> <br><br>
-
     {% endfor %}
     {% else %}
     <p>글이 없습니다.</p>
@@ -86,7 +70,7 @@
             </ul>
         </nav>
     {% endif %}
-    {% endblock %}
+
 </body>
 </html>
 
