@@ -44,6 +44,12 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return "{}".format(self.email)
 
+    def report_count_up(self):
+        self.report_count = self.report_count + 1
+        self.save()
+
+
+
 class Post(models.Model,HitCountMixin):
     
     Category_list = (  

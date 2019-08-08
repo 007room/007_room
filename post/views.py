@@ -1,9 +1,10 @@
+
 from main.models import *#Post, Review, Qna, Review_image, Comment
 from .forms import *
 from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.views.generic import DetailView, CreateView, DeleteView,UpdateView, ListView, FormView
 from django.urls import reverse_lazy
-from django.http.response import HttpResponseRedirect
+from django.http.response import HttpResponseRedirect, HttpResponse
 from hitcount.views import HitCountDetailView
 from django.forms import modelformset_factory
 from bootstrap_datepicker_plus import DateTimePickerInput
@@ -190,14 +191,25 @@ def confirm_review(request):
     return HttpResponseRedirect(reverse('post:detail_review', kwargs={'pk':request.GET['post_pk']}))
 
 
-
-
 class ReportView(FormView):
     template_name = 'post/report.html'
     form_class = ReportForm
-    ordering = ['-created_date']           
+    ordering = ['-created_date']     
+    model = CustomUser      
 
     def form_valid(self, form): #post method로 값이 전달되면
         new_report = form.save(commit=False)
+        new_report.reporter_user = self.request.user
+        user = CustomUser.objects.filter(email = new_report.reported_user)
+        context = {}
+        context['user'] = user
         new_report.save()
-        return HttpResponseRedirect(reverse('main:list', ))
+        # return HttpResponseRedirect(reverse('post:report_done_check', ))
+        return render(self.request, 'post/report_done.html', context )   
+        
+# def ReportDoneCheck(request):
+#     return render(request, 'post/report_done.html')
+
+def ReportDone(request):
+    return HttpResponse('<script type="text/javascript">window.close()</script>') 
+
