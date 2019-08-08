@@ -8,4 +8,5 @@ urlpatterns = [
     # path('search/', views.SearchFormView.as_view(), name= 'search'),
     path('search/', views.SearchView.as_view(), name = 'search'),
     path('sort/', views.ListView.as_view(), name = 'sort'),
+    path('myaccount/', views.AccountView.as_view(), name = 'myaccount'),
 ]

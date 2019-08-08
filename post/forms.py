@@ -1,4 +1,4 @@
-from main.models import Post, Review, Qna, Review_image, Comment
+from main.models import Post, Review, Qna, Review_image, Comment, Report
 from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
@@ -67,32 +67,18 @@ ImageFormSet = forms.inlineformset_factory(Review, Review_image, form=ImageForm,
 #     categories = MultipleChiceField(queryset=Post.category.all())
 
 
-
 class MyDatePickerInput(DateTimePickerInput):
-    template_name = 'post/datetimepicker.html'
+    template = 'post/datetimepicker.html'
 
 class PostForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        fields = ('title','category','etc_what','choose_date' ,'strat_date','end_date','Option','price','context',)
+        fields = ('title','category','etc_what','start_datetime','end_datetime','Option','price','context',)
        
         widgets = {
-            'choose_date':MyDatePickerInput(options={'debug': True}).start_of('event active dtime'),
-            'strat_date':DateTimePickerInput(
-                options ={ 
-                    "format":'%d/%m/%Y %H:%M',
-                    "locale":"asia/seoul",
-
-                }
-            ),
-            'end_date':DateTimePickerInput(
-                options ={ 
-                    "format":'%d/%m/%Y %H:%M',
-                    "locale":"asia/seoul",
-
-                }
-            ),
+            'start_datetime':MyDatePickerInput(options={'debug': True}),
+            'end_datetime':MyDatePickerInput(options={'debug': True}),
 
         }
 
@@ -102,3 +88,10 @@ class PostForm(forms.ModelForm):
         self.helper.form_method = 'post'
         self.helper.add_input(Submit('submit', '글 올리기'))
 
+
+
+class ReportForm(forms.ModelForm):
+    class Meta:
+        model = Report
+        fields = ('reporter_user','reported_user', 'reason', 'post_url')
+   

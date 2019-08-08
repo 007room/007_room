@@ -1,13 +1,11 @@
 from django.shortcuts import render, redirect, reverse
-from django.http.response import HttpResponseRedirect
 from django.views.generic.list import ListView
 from django.views.generic.edit import FormView
 from django.db.models import Q
 from .forms import SearchForm
 from .models import Post
+import operator
 
-
-#taemi
 
 class List(ListView):
     template_name = 'main/list.html'
@@ -34,29 +32,39 @@ class List(ListView):
             end_index = max_index
         page_range = paginator.page_range[start_index:end_index]
         context['page_range'] = page_range
-
-        if sort == 'new' :
-            print('들어옴')
-            # self.ordering = ['created_date']
+#정렬
+        if sort == 'new' :       # 최신순
             posts = Post.objects.order_by('-created_date')
-            context['object_list'] = posts[current_page*2-1: current_page*2+1]
-            # return render(self.request, 'main/list.html', {'object_list': posts})
-        elif sort == 'likes':
-            # 좋아요 정렬
-            pass
-        elif sort == 'review':
-            # 후기 정렬
-            pass
-        elif sort == 'price_up':
-            # 가격(오름차순)
-            pass
-        elif sort == 'price_down':
-            # 가격(내림차순)
-            pass
+            context['object_list'] = posts[current_page*2-2: current_page*2]
+        elif sort == 'likes':        # 좋아요
+            order = {}
+            posts = Post.objects.all()
+            for post in posts :
+                order[post] = post.post_likes.count()
+            data = sorted(order.items(), key=operator.itemgetter(1), reverse=True)
+            data_list = []
+            for i in data:
+                data_list.append(i[0])
+            context['object_list'] = data_list[current_page*2-2: current_page*2]
+        elif sort == 'review':      # 리뷰수
+            order = {}
+            posts = Post.objects.all()
+            for post in posts :
+                order[post] = post.reviews.count()
+            data = sorted(order.items(), key=operator.itemgetter(1), reverse=True)
+            data_list = []
+            for i in data:
+                data_list.append(i[0])
+            context['object_list'] = data_list[current_page*2-2: current_page*2]
+        elif sort == 'price_up':     # 가격 (오름차순)
+            posts = Post.objects.order_by('price')
+            context['object_list'] = posts[current_page*2-2: current_page*2]
+        elif sort == 'price_down':  # 가격 ( 내림차순 )
+            posts = Post.objects.order_by('-price')
+            context['object_list'] = posts[current_page*2-2: current_page*2]
 
         return context
 
-      
 class SearchView(FormView):
     template_name = 'main/search.html'
     form_class = SearchForm
@@ -75,5 +83,10 @@ class SearchView(FormView):
         context['search_word'] = word # 검색어를 컨텍스트 변수에 담는다
         context['form'] = form_class
         return render(self.request, self.template_name , context)
-       
+
+# 임의로 listview 넣어 놓음   
+class AccountView(ListView):
+    template_name = 'main/myaccount.html'
+    model = Post
+
 

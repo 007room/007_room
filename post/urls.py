@@ -6,7 +6,7 @@ app_name = 'post'
 urlpatterns = [
     #post
     path('detail/<int:pk>',views.PostDetailView.as_view(), name = 'detail'),
-    path('new', views.PostCreateView.as_view(), name='post_new'),
+    path('new', views.PostCreateView.as_view(), name='new'),
     path('edit/<int:pk>', views.PostUpdateView.as_view(), name='edit'),
     path('delete/<int:pk>',views.PostDeleteView.as_view(), name = 'delete'),
     #review
@@ -19,5 +19,6 @@ urlpatterns = [
     path('qna/<int:pk>',views.QnaDetailView.as_view(), name = 'detail_qna'),
     path('comment/',views.CommentCreateView.as_view(), name = 'new_comment'),
    
+    path('detail/<int:pk>/report', views.ReportView.as_view(), name = 'report'),
 
 ]

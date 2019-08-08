@@ -5,8 +5,9 @@ from django.views.generic import DetailView, CreateView, DeleteView,UpdateView, 
 from django.urls import reverse_lazy
 from django.http.response import HttpResponseRedirect
 from hitcount.views import HitCountDetailView
-from .forms import ReviewForm, QnaForm, ImageForm, PostForm
+from .forms import ReviewForm, QnaForm, ImageForm, PostForm,MyDatePickerInput, ReportForm
 from django.forms import modelformset_factory
+from bootstrap_datepicker_plus import DateTimePickerInput
 
 
 ImageFormSet = modelformset_factory(Review_image, form=ImageForm, extra=1, min_num=1)
@@ -22,8 +23,6 @@ class PostDetailView(HitCountDetailView):
         ctx['comment_form'] = ReviewForm(initial={'post_pk':self.object.pk})
         ctx['qna_form'] = QnaForm(initial={'post_pk':self.object.pk})
         ctx['image_formset'] = ImageFormSet(queryset=Review_image.objects.none())
-    
- 
         return ctx
     
 
@@ -34,20 +33,33 @@ class PostCreateView(CreateView):
     
     def get_form(self):
         form = super().get_form()
-        form.fields['choose_date'].widget = DateTimePickerInput()
+        form.fields['start_datetime'].widget = MyDatePickerInput()
+        form.fields['end_datetime'].widget = MyDatePickerInput()
         return form
 
     def form_valid(self, form):
         new_post = form.save(commit=False)
         new_post.user = self.request.user
-        new_post.choose_date.widget = DateTimePickerInput()
         new_post.save()
         return HttpResponseRedirect(reverse('main:list', ))
         
 class PostUpdateView(UpdateView): 
     model = Post
     template_name = 'post/update.html'
+    form_class = PostForm
     success_url = reverse_lazy('main:list')
+    
+    def get_form(self):
+        form = super().get_form()
+        form.fields['start_datetime'].widget = MyDatePickerInput()
+        form.fields['end_datetime'].widget = MyDatePickerInput()
+        return form
+
+    def form_valid(self, form):
+        new_post = form.save(commit=False)
+        new_post.user = self.request.user
+        new_post.save()
+        return HttpResponseRedirect(reverse('main:list', ))
 
 class PostDeleteView(DeleteView):
     model = Post
@@ -167,3 +179,12 @@ def confirm_review(request):
 
 
 
+class ReportView(FormView):
+    template_name = 'post/report.html'
+    form_class = ReportForm
+    ordering = ['-created_date']           
+
+    def form_valid(self, form): #post method로 값이 전달되면
+        new_report = form.save(commit=False)
+        new_report.save()
+        return HttpResponseRedirect(reverse('main:list', ))
