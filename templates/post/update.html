@@ -1,28 +1,14 @@
 {% extends 'base.html' %}
-{% load crispy_forms_tags %}  
-
+{% load bootstrap4 %}
+{% load crispy_forms_tags %} 
 
 {% block content %}
-<h1>Post Update</h1>
-<form action="" method='POST' enctype="multipart/form-data">
-            {% csrf_token %}
-                {{ form.title|as_crispy_field }}
-            <div class="row">
-                    <div class="col-6">
-                      {{ form.category|as_crispy_field }}
-                    </div>
-                    <div class="col-6">
-                      
-                    </div>
-            </div>
-                {{ form.etc_what|as_crispy_field }}
-                {{ form.Option|as_crispy_field }}
-                {{ form.choose_date|as_crispy_field}}
-                {{ form.price|as_crispy_field }}
-                {{ form.context|as_crispy_field }}
 
-            <button type="submit" class="btn btn-success">글 올리기</button>
-</form>  
-
-
+{{ form.media }}
+<form method="post">
+  {% csrf_token %}
+  {% bootstrap_form form %}
+  <input type="submit" value="수정완료">
+</form>
 {% endblock %}
+
