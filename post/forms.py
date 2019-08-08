@@ -1,4 +1,4 @@
-from main.models import Post, Review, Qna, Review_image
+from main.models import Post, Review, Qna, Review_image, Comment
 from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
@@ -32,6 +32,11 @@ class QnaForm(ReviewForm):
     class Meta:
         model = Qna
         fields = ('text',)
+
+class CommentForm(ReviewForm):
+    class Meta:
+        model = Comment
+        fields = ('text',)
     
 
 
@@ -42,7 +47,10 @@ class ImageForm(forms.ModelForm):
         model = Review_image
         fields = ['images',]
 
-
+class ConfirmForm(forms.ModelForm):
+    class Meta:
+        model = Review
+        fields=['confirm',]
 
 ImageFormSet = forms.inlineformset_factory(Review, Review_image, form=ImageForm, extra=2)
         
@@ -61,11 +69,7 @@ ImageFormSet = forms.inlineformset_factory(Review, Review_image, form=ImageForm,
 
 
 class MyDatePickerInput(DateTimePickerInput):
-<<<<<<< HEAD
-    template_name = 'my_app/date-picker.html'
-=======
     template_name = 'post/datetimepicker.html'
->>>>>>> bbd274305c8e31691be68adf6922d0ce8f88c0cd
 
 class PostForm(forms.ModelForm):
 
@@ -97,3 +101,4 @@ class PostForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.form_method = 'post'
         self.helper.add_input(Submit('submit', '글 올리기'))
+

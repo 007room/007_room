@@ -1,13 +1,13 @@
-from main.models import Post, Review, Qna, Review_image
-from .forms import ReviewForm, QnaForm, ImageFormSet,PostForm
+from main.models import Post, Review, Qna, Review_image, Comment
+from .forms import ReviewForm, QnaForm, ImageFormSet,PostForm, CommentForm, ConfirmForm
 from django.shortcuts import render, get_object_or_404, redirect, reverse
-from django.views.generic import DetailView, CreateView, DeleteView,UpdateView
+from django.views.generic import DetailView, CreateView, DeleteView,UpdateView, ListView
 from django.urls import reverse_lazy
 from django.http.response import HttpResponseRedirect
 from hitcount.views import HitCountDetailView
 from .forms import ReviewForm, QnaForm, ImageForm, PostForm
 from django.forms import modelformset_factory
-# taemi
+
 
 ImageFormSet = modelformset_factory(Review_image, form=ImageForm, extra=1, min_num=1)
 
@@ -98,7 +98,6 @@ class QnaCreateView(ReviewCreateView):
     model = Qna
     form_class = QnaForm
 
-
     def form_valid(self, form):
         parent_link = Post.objects.get(pk = form.cleaned_data['post_pk'])  
         new_qna = form.save(commit=False)
@@ -106,8 +105,19 @@ class QnaCreateView(ReviewCreateView):
         new_qna.post = parent_link
         new_qna.user = self.request.user
         new_qna.save()
-        return HttpResponseRedirect(reverse('post:detail', kwargs={'pk':parent_link.pk}))
+        return HttpResponseRedirect(reverse('post:detail_qna', kwargs={'pk':parent_link.pk}))
 
+class CommentCreateView(ReviewCreateView):
+    model = Comment
+    form_class = CommentForm
+
+    def form_valid(self, form):
+        parent_link = Post.objects.get(pk = form.cleaned_data['post_pk'])
+        new_comment = form.save(commit=False)
+        new_comment.post = parent_link
+        new_comment.qna = Qna.objects.get(pk = self.request.GET['qna_pk'])
+        new_comment.save()
+        return HttpResponseRedirect(reverse('post:detail_qna', kwargs={'pk':parent_link.pk}))
 
 class PostCreateView(CreateView):
     model = Post
@@ -121,4 +131,39 @@ class PostCreateView(CreateView):
         new_post.save()
         return HttpResponseRedirect(reverse('main:list', ))
         
+class QnaDetailView(ListView):
+    model = Qna
+    template_name = 'post/qna.html'
+
+    def get_context_data(self, **kwargs):
+        ctx =  super(QnaDetailView, self).get_context_data(**kwargs)
+        ctx['qna_form'] = QnaForm(initial={'post_pk':self.kwargs['pk']})
+        ctx['comment_form'] = CommentForm(initial={'post_pk':self.kwargs['pk']})
+        return ctx
+    
+    def get_queryset(self):
+        return Qna.objects.filter(post=self.kwargs['pk'])
+
+class ReviewDetailView(ListView):
+    model = Review
+    template_name = 'post/review.html'
+
+    def get_context_data(self, **kwargs):
+        ctx =  super(ReviewDetailView, self).get_context_data(**kwargs)
+        ctx['comment_form'] = ReviewForm(initial={'post_pk':self.kwargs['pk']})
+        ctx['image_formset'] = ImageFormSet(queryset=Review_image.objects.none())
+        ctx['confirm_form'] = ConfirmForm()
+        ctx['post_pk'] = self.kwargs['pk']
+        return ctx
+    def get_queryset(self):
+        return Review.objects.filter(post=self.kwargs['pk'])
+
+def confirm_review(request):
+    review = Review.objects.get(pk = request.GET['review_pk'])
+    review.confirm = True
+    review.save()
+    return HttpResponseRedirect(reverse('post:detail_review', kwargs={'pk':request.GET['post_pk']}))
+
+
+
 
