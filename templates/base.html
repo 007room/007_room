@@ -21,6 +21,7 @@
         <div class="col-8">
             <ul class="nav navbar-nav navbar-right">
                 {% if user.is_active %}
+                <li><a>잔여 포도알 [ 🍇 : {{user.podo}} ]</a></li>
                 <li><a href="{%url 'login' %}"> <span class="glyphicon glyphicon-heart"></span> welcome, {{user.username}}</a></li>
                 <li><a href="{% url 'logout' %}">Logout</a></li>
                 {% else %}

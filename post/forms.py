@@ -93,5 +93,5 @@ class PostForm(forms.ModelForm):
 class ReportForm(forms.ModelForm):
     class Meta:
         model = Report
-        fields = ('reporter_user','reported_user', 'reason', 'post_url')
+        fields = ('reported_user', 'reason', 'post_url', 'image')
    
