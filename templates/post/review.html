@@ -1,0 +1,49 @@
+<head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+      
+        <!-- 부가적인 테마 -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+      
+        <!-- 합쳐지고 최소화된 최신 자바스크립트 -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+      </head>
+<form action = "{% url "post:new_review" %}?post_pk={{object.pk}}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{comment_form}}
+    {{ image_formset.management_form }}
+        {% for form in image_formset %}
+        {{ form }}
+        {% endfor %}
+    <input type="submit"> 
+</form>
+
+{{post_pk}}
+{% for p in object_list %}
+    <br>
+    <div class="row featurette">
+        {% if p.confirm or not p.post.user.id == user.id %}
+            {% else %}
+            <form action="{% url "post:confirm_review" %}?post_pk={{post_pk}}&review_pk={{p.pk}}" method="post">
+                {% csrf_token %}
+                <button type="submit">confirm</button>
+            </form>
+            
+        {% endif %}
+        <div class="col-md-5">
+            <h3 class="featurette-heading"> {{p.user}} <span class="text-muted">{{p.text}}</span></h2>
+            <p class="lead">{{p.post}}</p>
+        </div>
+        {% for image in p.review_image_set.all %}
+            {% if image.images %}
+            <div class="col-md-3">
+                <img class="featurette-image img-responsive center-block" data-src="holder.js/500x500/auto" alt="300x300" src="{{image.images.url}}" data-holder-rendered="true">
+            </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <hr><br>
+{% endfor %}

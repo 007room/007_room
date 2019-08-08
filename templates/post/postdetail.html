@@ -38,29 +38,11 @@
     <img src="{{image.images.url}}" height="300" width="300">
 {% endfor %}
 <br>
-<a href="">qna</a>
+<a href="{% url "post:detail_qna" object.pk%}">qna~~~~~</a>
+<a href="{% url "post:detail_review" object.pk%}">review~~~~~</a>
+
 <p>
-    <form action = "{% url "post:new_review" %}?post_pk={{object.pk}}" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{comment_form}}
-        {{ image_formset.management_form }}
-            {% for form in image_formset %}
-            {{ form }}
-            {% endfor %}
-        <input type="submit"> 
-    </form>
-
-
-    <form action = "{% url "post:new_qna" %}?post_pk={{object.pk}}" method="post">
-        {% csrf_token %}
-        {{qna_form}}
-        <input type="submit">
-    </form>
-
+    
     
 </p> 
-
-
-
-
 {% endblock %}

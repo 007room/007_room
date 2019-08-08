@@ -1,4 +1,4 @@
-from main.models import Post, Review, Qna, Review_image, Report
+from main.models import Post, Review, Qna, Review_image, Comment, Report
 from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
@@ -32,7 +32,12 @@ class QnaForm(ReviewForm):
     class Meta:
         model = Qna
         fields = ('text',)
-   
+
+class CommentForm(ReviewForm):
+    class Meta:
+        model = Comment
+        fields = ('text',)
+    
 
 
 class ImageForm(forms.ModelForm):
@@ -41,6 +46,11 @@ class ImageForm(forms.ModelForm):
     class Meta:
         model = Review_image
         fields = ['images',]
+
+class ConfirmForm(forms.ModelForm):
+    class Meta:
+        model = Review
+        fields=['confirm',]
 
 ImageFormSet = forms.inlineformset_factory(Review, Review_image, form=ImageForm, extra=2)
         
