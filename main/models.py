@@ -80,6 +80,7 @@ class Post(models.Model,HitCountMixin):
     Option = MultiSelectField(choices=Option_list, max_length=50,default=False, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)  # 글 작성 시간 :  시간이 있는 날짜를 저장하는 datetime 필드를 만들기 
     Modified_date = models.DateTimeField(auto_now=True) # 글 게시 날짜 
+    rental_person = models.IntegerField(default = 1)
 
     def __str__(self):
         return "RoomShare : {}".format(self.title)
@@ -88,6 +89,10 @@ class Post(models.Model,HitCountMixin):
         if self.category=='etc' :
 
             return "ROOM etc :{}".format(self.etc_what) 
+
+class Cart(models.Model):
+    user = models.ForeignKey(CustomUser, default=None, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, default=None, on_delete=models.CASCADE)
 
 class Review(models.Model):
     user = models.ForeignKey(CustomUser, default=None, on_delete=models.CASCADE)
@@ -124,6 +129,8 @@ class Application(models.Model):
     purpost = models.CharField(max_length=200)
     add_more = models.CharField(max_length=200)         # 한 마디 추가 글
     phone = models.IntegerField()
+    rental_person = models.IntegerField()
+    confirm = models.BooleanField(default = False)
 
 #upload_to="anony_Board/%Y/%m/%d"
 class Qna_image(models.Model):
@@ -179,3 +186,11 @@ class Report(models.Model):
     reason = models.TextField()
     image = models.FileField(null=True, blank=True)
     post_url = models.CharField(max_length=500)
+
+class Podo(models.Model):
+    podo = models.IntegerField() # +3 | -2
+    reason = models.CharField(max_length=20) #빌릴때 - | 충전 + | 후기컨펌받으면 +  
+
+    # def save(self, *args, **kwargs):
+    #     if a == review_confirm
+    #     reason = '후기컨펌받음'

@@ -1,7 +1,7 @@
 from main.models import Post, Review, Qna, Review_image, Comment
 from .forms import ReviewForm, QnaForm, ImageFormSet,PostForm, CommentForm, ConfirmForm
 from django.shortcuts import render, get_object_or_404, redirect, reverse
-from django.views.generic import DetailView, CreateView, DeleteView,UpdateView, ListView
+from django.views.generic import DetailView, CreateView, DeleteView,UpdateView, ListView, FormView
 from django.urls import reverse_lazy
 from django.http.response import HttpResponseRedirect
 from hitcount.views import HitCountDetailView
