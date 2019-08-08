@@ -6,7 +6,7 @@ app_name = 'post'
 urlpatterns = [
     #post
     path('detail/<int:pk>',views.PostDetailView.as_view(), name = 'detail'),
-    path('new', views.PostCreateView.as_view(), name='post_new'),
+    path('new', views.PostCreateView.as_view(), name='new'),
     path('edit/<int:pk>', views.PostUpdateView.as_view(), name='edit'),
     path('delete/<int:pk>',views.PostDeleteView.as_view(), name = 'delete'),
     #review

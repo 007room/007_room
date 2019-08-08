@@ -4,11 +4,35 @@
 
 {% load hitcount_tags %}
 
-<h1>{{object.title}}</h1>
-<h1>{{object.context}}</h1>
-{{ object.user }} | <a href="#" onclick="window.open('{{post.id}}/report','window팝업', 'width=500, height=600, menubar=no, status=no, toolbar=no, scrollbar=no');" >유저 신고하기</a>
+
+
+<h1><a href ="{% url 'post:edit' post.id %}"> 수정하기 </a></h1>
+
+<h1>제목 : {{object.title}}</h1>
+<h1>유저 : {{ object.user }} | <a href="#" onclick="window.open('{{post.id}}/report','window팝업', 'width=500, height=600, menubar=no, status=no, toolbar=no, scrollbar=no');" >유저 신고하기</a>
+<h1>댓글 : {{object.context}}</h1>
+<h1>price : {{object.price}}</h1>
+<h3>대여시작시간 : {{object.start_datetime}} 대여종료시간 : {{object.end_datetime}}</h3>
+<h3>사진 모두 보기 :  {{object.images}}</h3>
+<h1 id="duration"> </h1>
+<h1 id="totalpayment"> </h1>
+
 <h1>조회수: {% get_hit_count for object %}</h1>
 
+<script>
+    //날짜계산
+    var startDate = new Date("{{object.start_datetime.year}}", "{{object.start_datetime.month}}", "{{object.start_datetime.day}}", "{{object.start_datetime.hour}}", "{{object.start_datetime.minute}}");
+    var endDate = new Date("{{object.end_datetime.year}}", "{{object.end_datetime.month}}", "{{object.end_datetime.day}}", "{{object.end_datetime.hour}}", "{{object.end_datetime.minute}}");
+    var diff = (endDate-startDate); // Difference in milliseconds.
+    var duration = diff/1000/60/60;
+    
+    //이용시간 계산
+    var pay = new Number("{{object.price}}");
+    var totalpayment = (duration*pay) 
+    $("#duration").text("총 이용시간 :" + duration + "시간");
+    //document.getElementById("duration").innerHTML = "duration :" + duration;
+    $("#totalpayment").text("총 수익 :" + totalpayment + "원");
+</script>
 
 {% for image in object.post_image_set.all %}
     <img src="{{image.images.url}}" height="300" width="300">
