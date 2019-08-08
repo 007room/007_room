@@ -93,7 +93,6 @@ class Post(models.Model,HitCountMixin):
     
     def ROOM_TYPE(self):
         if self.category=='etc' :
-
             return "ROOM etc :{}".format(self.etc_what) 
 
 class Cart(models.Model):
