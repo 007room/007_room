@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect, reverse
-from django.http.response import HttpResponseRedirect
 from django.views.generic.list import ListView
 from django.views.generic.edit import FormView
 from django.db.models import Q
@@ -33,7 +32,7 @@ class List(ListView):
             end_index = max_index
         page_range = paginator.page_range[start_index:end_index]
         context['page_range'] = page_range
-
+#정렬
         if sort == 'new' :       # 최신순
             posts = Post.objects.order_by('-created_date')
             context['object_list'] = posts[current_page*2-2: current_page*2]
