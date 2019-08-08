@@ -14,6 +14,6 @@ urlpatterns = [
 
     #qna
     path('new_qna',views.QnaCreateView.as_view(), name = 'new_qna'),
-   
+    path('detail/<int:pk>/report', views.ReportView.as_view(), name = 'report'),
 
 ]

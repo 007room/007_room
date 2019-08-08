@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomUser, Post, Review, Qna, Application, Qna_image, Post_image, Date, Post_like, Review_like, Comment, Review_image
+from .models import CustomUser, Post, Review, Qna, Application, Qna_image, Post_image, Date, Post_like, Review_like, Comment, Review_image, Report
 # Register your models here.
 
 admin.site.register(Post)
@@ -14,5 +14,6 @@ admin.site.register(Review_like)
 admin.site.register(Comment)
 admin.site.register(CustomUser)
 admin.site.register(Review_image)
+admin.site.register(Report)
 
 

@@ -1,4 +1,4 @@
-from main.models import Post, Review, Qna, Review_image
+from main.models import Post, Review, Qna, Review_image, Report
 from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
@@ -91,3 +91,11 @@ class PostForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.form_method = 'post'
         self.helper.add_input(Submit('submit', '글 올리기'))
+
+
+
+class ReportForm(forms.ModelForm):
+    class Meta:
+        model = Report
+        fields = ('reporter_user','reported_user', 'reason', 'post_url')
+   

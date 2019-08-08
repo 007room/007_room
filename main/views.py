@@ -83,5 +83,10 @@ class SearchView(FormView):
         context['search_word'] = word # 검색어를 컨텍스트 변수에 담는다
         context['form'] = form_class
         return render(self.request, self.template_name , context)
-       
+
+# 임의로 listview 넣어 놓음   
+class AccountView(ListView):
+    template_name = 'main/myaccount.html'
+    model = Post
+
 

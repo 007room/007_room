@@ -6,6 +6,7 @@
 
 <h1>{{object.title}}</h1>
 <h1>{{object.context}}</h1>
+{{ object.user }} | <a href="#" onclick="window.open('{{post.id}}/report','window팝업', 'width=500, height=600, menubar=no, status=no, toolbar=no, scrollbar=no');" >유저 신고하기</a>
 <h1>조회수: {% get_hit_count for object %}</h1>
 
 

@@ -176,3 +176,9 @@ class Comment(models.Model):
         return "{}".format(self.context)
 
 
+class Report(models.Model):
+    reporter_user = models.ForeignKey(CustomUser, default=None, on_delete=models.CASCADE)
+    reported_user = models.CharField(max_length=200)
+    reason = models.TextField()
+    image = models.FileField(null=True, blank=True)
+    post_url = models.CharField(max_length=500)
