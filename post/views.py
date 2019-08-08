@@ -1,15 +1,15 @@
-from main.models import Post, Review, Qna, Review_image, Comment
-from .forms import ReviewForm, QnaForm, ImageFormSet,PostForm, CommentForm, ConfirmForm
+from main.models import *#Post, Review, Qna, Review_image, Comment
+from .forms import *
 from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.views.generic import DetailView, CreateView, DeleteView,UpdateView, ListView, FormView
 from django.urls import reverse_lazy
 from django.http.response import HttpResponseRedirect
 from hitcount.views import HitCountDetailView
-from .forms import ReviewForm, QnaForm, ImageForm, PostForm,MyDatePickerInput, ReportForm
 from django.forms import modelformset_factory
 from bootstrap_datepicker_plus import DateTimePickerInput
 
 
+PostImageFormSet = modelformset_factory(Post_image, form=ImageForm, extra=1, min_num=1)
 ImageFormSet = modelformset_factory(Review_image, form=ImageForm, extra=1, min_num=1)
 
 # Create your views here.
@@ -30,7 +30,10 @@ class PostCreateView(CreateView):
     model = Post
     template_name = 'post/post_new.html'
     form_class = PostForm
-    
+
+    # def dispatch(self, *args, **kwargs):
+    #     return super(PostCreateView, self).dispatch(*args, **kwargs)
+
     def get_form(self):
         form = super().get_form()
         form.fields['start_datetime'].widget = MyDatePickerInput()
@@ -38,11 +41,32 @@ class PostCreateView(CreateView):
         return form
 
     def form_valid(self, form):
+        parent_link = Post.objects.get(pk = form.cleaned_data['post_pk'])
         new_post = form.save(commit=False)
+        new_post.post = parent_link
         new_post.user = self.request.user
         new_post.save()
-        return HttpResponseRedirect(reverse('main:list', ))
-        
+        image_formset = ImageFormSet(self.request.POST, self.request.FILES,queryset=Post_image.objects.none())
+        for form in image_formset:
+            if form.is_valid():
+                print('에러에러')
+            else :
+                print(form,'\n')
+                image = form.cleaned_data['images']
+                photo = Post_image(review=new_post, images=image, user=self.request.user)
+                photo.save()
+
+        return HttpResponseRedirect(reverse('main:list', kwargs={'pk':parent_link.pk}))
+
+    def get_initial(self):
+        initial_data = super(PostCreateView, self).get_initial()
+#         initial_data['post_pk'] = self.request.GET['post_pk']
+
+    def get_context_data(self, **kwargs):
+        ctx =  super(PostCreateView, self).get_context_data(**kwargs)
+        ctx['image_form'] = PostImageForm()
+        return ctx
+
 class PostUpdateView(UpdateView): 
     model = Post
     template_name = 'post/update.html'
@@ -102,9 +126,8 @@ class ReviewCreateView(CreateView):
 
     def get_context_data(self, **kwargs):
         ctx =  super(ReviewCreateView, self).get_context_data(**kwargs)
-        # ctx['comment_form'] = ReviewForm(initial={'post_pk':self.object.pk})
-    
-
+        # ctx['comment_form'] = ReviewForm(initial={'post_pk':self.object.pk})  
+        return ctx
 
 class QnaCreateView(ReviewCreateView):
     model = Qna
@@ -131,17 +154,7 @@ class CommentCreateView(ReviewCreateView):
         new_comment.save()
         return HttpResponseRedirect(reverse('post:detail_qna', kwargs={'pk':parent_link.pk}))
 
-class PostCreateView(CreateView):
-    model = Post
-    template_name = 'post/post_new.html'
-    form_class = PostForm
 
-    def form_valid(self, form):
-        
-        new_post = form.save(commit=False)
-        new_post.user = self.request.user
-        new_post.save()
-        return HttpResponseRedirect(reverse('main:list', ))
         
 class QnaDetailView(ListView):
     model = Qna
