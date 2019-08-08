@@ -5,8 +5,9 @@ from django.views.generic import DetailView, CreateView, DeleteView,UpdateView
 from django.urls import reverse_lazy
 from django.http.response import HttpResponseRedirect
 from hitcount.views import HitCountDetailView
-from .forms import ReviewForm, QnaForm, ImageForm, PostForm
+from .forms import ReviewForm, QnaForm, ImageForm, PostForm,MyDatePickerInput
 from django.forms import modelformset_factory
+from bootstrap_datepicker_plus import DateTimePickerInput
 # taemi
 
 ImageFormSet = modelformset_factory(Review_image, form=ImageForm, extra=1, min_num=1)
@@ -22,8 +23,6 @@ class PostDetailView(HitCountDetailView):
         ctx['comment_form'] = ReviewForm(initial={'post_pk':self.object.pk})
         ctx['qna_form'] = QnaForm(initial={'post_pk':self.object.pk})
         ctx['image_formset'] = ImageFormSet(queryset=Review_image.objects.none())
-    
- 
         return ctx
     
 
@@ -34,13 +33,13 @@ class PostCreateView(CreateView):
     
     def get_form(self):
         form = super().get_form()
-        form.fields['choose_date'].widget = DateTimePickerInput()
+        form.fields['start_datetime'].widget = MyDatePickerInput()
+        form.fields['end_datetime'].widget = MyDatePickerInput()
         return form
 
     def form_valid(self, form):
         new_post = form.save(commit=False)
         new_post.user = self.request.user
-        new_post.choose_date.widget = DateTimePickerInput()
         new_post.save()
         return HttpResponseRedirect(reverse('main:list', ))
         
@@ -108,15 +107,6 @@ class QnaCreateView(ReviewCreateView):
         new_qna.save()
         return HttpResponseRedirect(reverse('post:detail', kwargs={'pk':parent_link.pk}))
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-
-=======
-      
->>>>>>> 0ef0c1364c05301cb011a26aca76c030b0b6845c
-
 class PostCreateView(CreateView):
     model = Post
     template_name = 'post/post_new.html'
@@ -128,7 +118,3 @@ class PostCreateView(CreateView):
         new_post.user = self.request.user
         new_post.save()
         return HttpResponseRedirect(reverse('main:list', ))
-        
->>>>>>> ff4caf512cd0843ee14499efda0ee0aa3a11039d
-=======
->>>>>>> be3ef30cdf188d674fdfd52eea83798920db3d45

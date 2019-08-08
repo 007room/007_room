@@ -48,6 +48,9 @@ INSTALLED_APPS = [
     "bootstrap4",
     'bootstrap_datepicker_plus',
 ]
+BOOTSTRAP4= {
+    'include_jquery':True,
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -146,7 +149,8 @@ AUTH_USER_MODEL = 'main.CustomUser'
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+#CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 LOGIN_REDIRECT_URL = 'main:list'
 LOGOUT_REDIRECT_URL = 'main:list'

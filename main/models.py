@@ -40,13 +40,11 @@ class CustomUser(AbstractUser):
     profile_image = models.FileField(null=True, blank=True)
     #keywords = models.CharField()                      #보류
 
-
-    def __str__(self):
-        return "{}".format(self.email)
-
     class Meta(AbstractUser.Meta):
         swappable = 'AUTH_USER_MODEL'
-
+        
+    def __str__(self):
+        return "{}".format(self.email)
 
 class Post(models.Model,HitCountMixin):
     
@@ -73,9 +71,10 @@ class Post(models.Model,HitCountMixin):
     title = models.CharField(max_length=50)
     context = models.TextField()
     user = models.ForeignKey(CustomUser, default=None, on_delete=models.CASCADE)
-    choose_date = models.DateTimeField() 
-    strat_date = models.DateTimeField() #!!!!!!! 일정 기간을 저장하는 필드를 만들기    
-    end_date = models.DateTimeField() 
+    #시간
+    start_datetime = models.DateTimeField() #!!!!!!! 일정 기간을 저장하는 필드를 만들기    
+    end_datetime = models.DateTimeField() 
+    duration = models.DateTimeField()
     '''공간 유형 선택'''
     category = MultiSelectField(choices=Category_list, max_length=50, blank=True)
     etc_what = models.CharField(max_length=50, null=True,blank=True)
@@ -87,6 +86,10 @@ class Post(models.Model,HitCountMixin):
 
     def __str__(self):
         return "RoomShare : {}".format(self.title)
+
+    def duration(self):
+        self.duration = self.end_datetime - self.start_datetime
+        return "총 이용시간 : {}".format(self.duration)
     
     def ROOM_TYPE(self):
         if self.category=='etc' :
