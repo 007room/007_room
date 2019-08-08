@@ -59,36 +59,19 @@ ImageFormSet = forms.inlineformset_factory(Review, Review_image, form=ImageForm,
 #     categories = MultipleChiceField(queryset=Post.category.all())
 
 
-
 class MyDatePickerInput(DateTimePickerInput):
-<<<<<<< HEAD
-    template_name = 'my_app/date-picker.html'
-=======
-    template_name = 'post/datetimepicker.html'
->>>>>>> bbd274305c8e31691be68adf6922d0ce8f88c0cd
+    template = 'post/datetimepicker.html'
+
 
 class PostForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        fields = ('title','category','etc_what','choose_date' ,'strat_date','end_date','Option','price','context',)
+        fields = ('title','category','etc_what','start_datetime','end_datetime','Option','price','context',)
        
         widgets = {
-            'choose_date':MyDatePickerInput(options={'debug': True}).start_of('event active dtime'),
-            'strat_date':DateTimePickerInput(
-                options ={ 
-                    "format":'%d/%m/%Y %H:%M',
-                    "locale":"asia/seoul",
-
-                }
-            ),
-            'end_date':DateTimePickerInput(
-                options ={ 
-                    "format":'%d/%m/%Y %H:%M',
-                    "locale":"asia/seoul",
-
-                }
-            ),
+            'start_datetime':MyDatePickerInput(options={'debug': True}),
+            'end_datetime':MyDatePickerInput(options={'debug': True}),
 
         }
 
