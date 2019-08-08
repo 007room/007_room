@@ -6,8 +6,27 @@
 
 <h1>{{object.title}}</h1>
 <h1>{{object.context}}</h1>
+<h1>{{object.price}}</h1>
+<h1>{{object.start_datetime}}</h1>
+<h1>{{object.end_datetime}}</h1>
+<h1 id="duration"> </h1>
+<h1 id="totalpayment"> </h1>
 <h1>조회수: {% get_hit_count for object %}</h1>
 
+<script>
+    //날짜계산
+    var startDate = new Date("{{object.start_datetime.year}}", "{{object.start_datetime.month}}", "{{object.start_datetime.day}}", "{{object.start_datetime.hour}}", "{{object.start_datetime.minute}}");
+    var endDate = new Date("{{object.end_datetime.year}}", "{{object.end_datetime.month}}", "{{object.end_datetime.day}}", "{{object.end_datetime.hour}}", "{{object.end_datetime.minute}}");
+    var diff = (endDate-startDate); // Difference in milliseconds.
+    var duration = diff/1000/60/60;
+    
+    //이용시간 계산
+    var pay = new Number("{{object.price}}");
+    var totalpayment = (duration*pay) 
+    $("#duration").text("duration :" + duration);
+    //document.getElementById("duration").innerHTML = "duration :" + duration;
+    $("#totalpayment").text("총 이용금액 :" + totalpayment);
+</script>
 
 {% for image in object.post_image_set.all %}
     <img src="{{image.images.url}}" height="300" width="300">
