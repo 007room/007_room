@@ -4,11 +4,13 @@
 
 {% load hitcount_tags %}
 
-<h1>{{object.title}}</h1>
-<h1>{{object.context}}</h1>
-<h1>{{object.price}}</h1>
-<h1>{{object.start_datetime}}</h1>
-<h1>{{object.end_datetime}}</h1>
+<h1><a href ="{% url 'post:edit' post.id %}"> 수정하기 </a></h1>
+
+<h1>제목 : {{object.title}}</h1>
+<h1>댓글 : {{object.context}}</h1>
+<h1>price : {{object.price}}</h1>
+<h3>대여시작시간 : {{object.start_datetime}} 대여종료시간 : {{object.end_datetime}}</h3>
+<h3>사진 모두 보기 :  {{object.images}}</h3>
 <h1 id="duration"> </h1>
 <h1 id="totalpayment"> </h1>
 <h1>조회수: {% get_hit_count for object %}</h1>
@@ -23,9 +25,9 @@
     //이용시간 계산
     var pay = new Number("{{object.price}}");
     var totalpayment = (duration*pay) 
-    $("#duration").text("duration :" + duration);
+    $("#duration").text("총 이용시간 :" + duration + "시간");
     //document.getElementById("duration").innerHTML = "duration :" + duration;
-    $("#totalpayment").text("총 이용금액 :" + totalpayment);
+    $("#totalpayment").text("총 수익 :" + totalpayment + "원");
 </script>
 
 {% for image in object.post_image_set.all %}

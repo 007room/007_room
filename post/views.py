@@ -46,7 +46,20 @@ class PostCreateView(CreateView):
 class PostUpdateView(UpdateView): 
     model = Post
     template_name = 'post/update.html'
+    form_class = PostForm
     success_url = reverse_lazy('main:list')
+    
+    def get_form(self):
+        form = super().get_form()
+        form.fields['start_datetime'].widget = MyDatePickerInput()
+        form.fields['end_datetime'].widget = MyDatePickerInput()
+        return form
+
+    def form_valid(self, form):
+        new_post = form.save(commit=False)
+        new_post.user = self.request.user
+        new_post.save()
+        return HttpResponseRedirect(reverse('main:list', ))
 
 class PostDeleteView(DeleteView):
     model = Post
