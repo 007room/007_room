@@ -31,15 +31,8 @@ class ReviewForm(forms.ModelForm):
 class QnaForm(ReviewForm):
     class Meta:
         model = Qna
-        fields = ('context',)
-    def __init__(self, *args, **kwargs):
-        super(ReviewForm, self).__init__(*args, **kwargs)
-
-        self.fields['context'].widget.attrs = {
-            'class': 'form-control',
-            'placeholder': "This is a placeholder test",
-            'rows': 10
-        }
+        fields = ('text',)
+    
 
 
 class ImageForm(forms.ModelForm):
@@ -68,6 +61,7 @@ ImageFormSet = forms.inlineformset_factory(Review, Review_image, form=ImageForm,
 
 class MyDatePickerInput(DateTimePickerInput):
     template = 'post/datetimepicker.html'
+
 
 class PostForm(forms.ModelForm):
 
