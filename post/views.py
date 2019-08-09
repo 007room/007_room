@@ -9,6 +9,7 @@ from hitcount.views import HitCountDetailView
 from django.forms import modelformset_factory
 from bootstrap_datepicker_plus import DateTimePickerInput
 
+
 ImageFormSet = modelformset_factory(Review_image, form=ImageForm, extra=1, min_num=1)
 
 # Create your views here.
@@ -36,13 +37,12 @@ class PostCreateView(CreateView):
         form.fields['end_datetime'].widget = MyDatePickerInput()
         return form
 
-    def form_valid(self, form):       
+
+    def form_valid(self, form):
         new_post = form.save(commit=False)
         new_post.user = self.request.user
         new_post.save()
-
         return HttpResponseRedirect(reverse('main:list', kwargs={'pk':parent_link.pk}))
-
 
 class PostUpdateView(UpdateView): 
     model = Post
