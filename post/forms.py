@@ -39,21 +39,12 @@ class CommentForm(ReviewForm):
         fields = ('text',)
     
 
-<<<<<<< HEAD
 # class PostImageForm(forms.ModelForm):
 #     post_pk = forms.IntegerField(widget=forms.HiddenInput)
 #     # images = forms.ImageField( widget=forms.FileInput)
 #     class Meta:
 #         model = Post_image
 #         fields = ['images',]
-=======
-class PostImageForm(forms.ModelForm):
-    post_pk = forms.IntegerField(widget=forms.HiddenInput)
-    # images = forms.ImageField( widget=forms.FileInput)
-    class Meta:
-        model = Post_image
-        fields = ['images',]
->>>>>>> ffd99d3d3cf820d5c84910e97f8fdb12da3c2a10
 
 class ImageForm(forms.ModelForm):
     review_pk = forms.IntegerField(widget=forms.HiddenInput)
@@ -87,7 +78,6 @@ class MyDatePickerInput(DateTimePickerInput):
     template = 'post/datetimepicker.html'
 
 class PostForm(forms.ModelForm):
-    post_pk = forms.IntegerField(widget=forms.HiddenInput)
 
     class Meta:
         model = Post
@@ -96,7 +86,6 @@ class PostForm(forms.ModelForm):
         widgets = {
             'start_datetime':MyDatePickerInput(options={'debug': True}),
             'end_datetime':MyDatePickerInput(options={'debug': True}),
-
         }
 
     def __init__(self, *args, **kwargs):
