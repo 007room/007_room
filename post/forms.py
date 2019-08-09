@@ -39,12 +39,12 @@ class CommentForm(ReviewForm):
         fields = ('text',)
     
 
-# class PostImageForm(forms.ModelForm):
-#     post_pk = forms.IntegerField(widget=forms.HiddenInput)
-#     # images = forms.ImageField( widget=forms.FileInput)
-#     class Meta:
-#         model = Post_image
-#         fields = ['images',]
+class PostImageForm(forms.ModelForm):
+    # post_pk = forms.IntegerField(widget=forms.HiddenInput)
+    # images = forms.ImageField( widget=forms.FileInput)
+    class Meta:
+        model = Post_image
+        fields = ['images',]
 
 class ImageForm(forms.ModelForm):
     review_pk = forms.IntegerField(widget=forms.HiddenInput)
@@ -58,9 +58,6 @@ class ConfirmForm(forms.ModelForm):
         model = Review
         fields=['confirm',]
 
-ImageFormSet = forms.inlineformset_factory(Review, Review_image, form=ImageForm, extra=2)
-
-# PostImageFormSet = forms.inlineformset_factory(Post, Post_image, form=ImageForm, extra=2)
 
 '''custom field class widget 설정 및 유효성 검사 메소드 정의 '''
 # class MultipleChiceField(forms.ModelMultipleChoiceField):  # multipleChiceField 상속함
@@ -100,3 +97,5 @@ class ReportForm(forms.ModelForm):
         model = Report
         fields = ('reported_user', 'reason', 'post_url', 'image')
    
+ImageFormSet = forms.inlineformset_factory(Review, Review_image, form=ImageForm, extra=2)
+PostImageFormSet = forms.inlineformset_factory(Post, Post_image, form=PostImageForm, extra=2)

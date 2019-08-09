@@ -5,10 +5,14 @@
 {% block content %}
 
 {{ form.media }}
-<form method="post">
+<form action="" method="POST" enctype="multipart/form-data">
   {% csrf_token %}
   {% bootstrap_form form %}
-  {{image_form}}
+  {{ post_image_formset.management_form }}
+        {% for form in post_image_formset %}
+        {{ form }}
+        {% endfor %}
+
   <input type="submit" value="Save">
 </form>
 

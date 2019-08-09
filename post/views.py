@@ -9,7 +9,7 @@ from hitcount.views import HitCountDetailView
 from django.forms import modelformset_factory
 from bootstrap_datepicker_plus import DateTimePickerInput
 
-
+PostImageFormSet = modelformset_factory(Post_image, form=PostImageForm, extra=1, min_num=1)
 ImageFormSet = modelformset_factory(Review_image, form=ImageForm, extra=1, min_num=1)
 
 # Create your views here.
@@ -24,24 +24,70 @@ class PostDetailView(HitCountDetailView):
         ctx['qna_form'] = QnaForm(initial={'post_pk':self.object.pk})
         ctx['image_formset'] = ImageFormSet(queryset=Review_image.objects.none())
         return ctx
-    
 
 class PostCreateView(CreateView):
     model = Post
     template_name = 'post/post_new.html'
     form_class = PostForm
     
+    # def dispatch(self, *args, **kwargs):
+    #     return super(PostCreateView, self).dispatch(*args, **kwargs)
+
     def get_form(self):
         form = super().get_form()
         form.fields['start_datetime'].widget = MyDatePickerInput()
         form.fields['end_datetime'].widget = MyDatePickerInput()
         return form
 
+    # def form_invalid(self, form):
+    #     print('form invalid')
+    #     print(form)
+    #     return HttpResponse('form invalid')
+
     def form_valid(self, form):
+        # parent_link = Post.objects.get(pk = form.cleaned_data['post_pk'])
         new_post = form.save(commit=False)
+        # new_post.post = parent_link
         new_post.user = self.request.user
         new_post.save()
-        return HttpResponseRedirect(reverse('main:list', ))
+        post_image_formset = PostImageFormSet(self.request.POST, self.request.FILES)
+        # print('image_formset',image_formset)
+        if post_image_formset.is_valid():
+            for form in post_image_formset:
+                if form.is_valid():
+                    image = form.cleaned_data.get('images', '')
+                    if image:
+                        photo = Post_image(post=new_post, images=image, user=self.request.user)
+                        photo.save()
+                    
+        else:
+            print('에러에러')
+
+        # for form in post_image_formset:
+        #     if form.is_valid():
+        #         print(type(form.cleaned_data['images']))
+        #         print(form.cleaned_data['images'])
+        #         # image = form.fields['images']
+        #         # photo = Post_image(post=new_post, images=image, user=self.request.user)
+        #         # photo.save()
+            # else:
+            #     print('에러에러')
+  
+        return HttpResponseRedirect(reverse('main:list', )) #kwargs={'pk':parent_link.pk}
+
+    def get_initial(self):
+        initial_data = super(PostCreateView, self).get_initial()
+        # initial_data['post_pk'] = self.request.GET.get('post_pk', '')
+
+    def get_context_data(self, **kwargs):
+        ctx =  super(PostCreateView, self).get_context_data(**kwargs)
+        print('aa')
+        ctx['post_image_formset'] = PostImageFormSet()
+        # ctx['post_image_form'] = PostImageForm(initial={'post_pk':self.object.pk})  
+        return ctx
+
+    def get_queryset(self):
+        return Post_image.objects.none()
 
 
 class PostUpdateView(UpdateView): 
