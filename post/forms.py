@@ -95,7 +95,6 @@ class PostForm(forms.ModelForm):
         self.helper.add_input(Submit('submit', '글 올리기'))
 
 
-
 class ReportForm(forms.ModelForm):
     class Meta:
         model = Report
