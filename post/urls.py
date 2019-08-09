@@ -8,6 +8,8 @@ urlpatterns = [
     path('new', views.PostCreateView.as_view(), name='new'),
     path('edit/<int:pk>', views.PostUpdateView.as_view(), name='edit'),
     path('delete/<int:pk>',views.PostDeleteView.as_view(), name = 'delete'),
+
+    path('application/<int:pk>',views.ApplicationCreateView.as_view(), name = 'application'),
     #review
     path('new_review',views.ReviewCreateView.as_view(), name = 'new_review'),
     path('review/<int:pk>',views.ReviewDetailView.as_view(), name = 'detail_review'),

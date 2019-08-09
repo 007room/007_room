@@ -129,8 +129,8 @@ class Application(models.Model):
     guest = models.ForeignKey(CustomUser, default=None, on_delete=models.CASCADE)
     start_date = models.IntegerField(default=1)
     end_date = models.IntegerField(default=1)
-    start_time = models.IntegerField(default=0)
-    end_time = models.IntegerField(default=0)
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
     purpost = models.CharField(max_length=200)
     add_more = models.CharField(max_length=200)         # 한 마디 추가 글
     phone = models.IntegerField()

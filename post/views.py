@@ -212,7 +212,10 @@ def confirm_review(request):
     review.save()
     return HttpResponseRedirect(reverse('post:detail_review', kwargs={'pk':request.GET['post_pk']}))
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> 282deea01d2eb49132e8c8ed38448094146406b8
 class ReportView(FormView):
     template_name = 'post/report.html'
     form_class = ReportForm
@@ -226,6 +229,20 @@ class ReportView(FormView):
         context = {}
         context['user'] = user
         new_report.save()
+<<<<<<< HEAD
+        return HttpResponseRedirect(reverse('main:list', ))
+
+class ApplicationCreateView(CreateView):
+    model = Application
+    template_name = 'post/application.html'
+    form_class = ApplicationForm
+
+    def form_valid(self, form):
+        new_post = form.save(commit=False)
+        new_post.user = self.request.user
+        new_post.save()
+        return HttpResponseRedirect(reverse('main:list', ))
+=======
         # return HttpResponseRedirect(reverse('post:report_done_check', ))
         return render(self.request, 'post/report_done.html', context )   
         
@@ -235,3 +252,4 @@ class ReportView(FormView):
 def ReportDone(request):
     return HttpResponse('<script type="text/javascript">window.close()</script>') 
 
+>>>>>>> 282deea01d2eb49132e8c8ed38448094146406b8

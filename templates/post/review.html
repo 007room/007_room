@@ -21,7 +21,10 @@
     <input type="submit"> 
 </form>
 
-{{post_pk}}
+{{user.username}}
+{% if user.username == "haeran" %}
+<h1>ss</h1>
+{% endif %}
 {% for p in object_list %}
     <br>
     <div class="row featurette">
@@ -33,6 +36,7 @@
             </form>
             
         {% endif %}
+        {{user.id}}
         <div class="col-md-5">
             <h3 class="featurette-heading"> {{p.user}} <span class="text-muted">{{p.text}}</span></h2>
             <p class="lead">{{p.post}}</p>
