@@ -192,10 +192,16 @@ class Report(models.Model):
     image = models.FileField(null=True, blank=True)
     post_url = models.CharField(max_length=500)
 
-class Podo(models.Model):
-    podo = models.IntegerField() # +3 | -2
+class Podo_record(models.Model):
+    change_podo = models.IntegerField() # +3 | -2
     reason = models.CharField(max_length=20) #빌릴때 - | 충전 + | 후기컨펌받으면 +  
+    user = models.ForeignKey(CustomUser, default=None, on_delete=models.CASCADE)
+    change_time = DateTimeField(auto_now_add=True)
 
     # def save(self, *args, **kwargs):
     #     if a == review_confirm
     #     reason = '후기컨펌받음'
+    # def buy(self, use_podo, use_url):
+        
+
+    # def add_podo(self, add_podo)
