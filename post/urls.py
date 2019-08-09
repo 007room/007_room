@@ -22,5 +22,7 @@ urlpatterns = [
     path('comment/',views.CommentCreateView.as_view(), name = 'new_comment'),
    
     path('detail/<int:pk>/report', views.ReportView.as_view(), name = 'report'),
+    # path('detail/report_done_check', views.ReportDoneCheck, name = 'report_done_check'),
+    path('detail/report_done', views.ReportDone, name = 'report_done'),
 
 ]
