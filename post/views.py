@@ -10,7 +10,6 @@ from django.forms import modelformset_factory
 from bootstrap_datepicker_plus import DateTimePickerInput
 
 
-PostImageFormSet = modelformset_factory(Post_image, form=ImageForm, extra=1, min_num=1)
 ImageFormSet = modelformset_factory(Review_image, form=ImageForm, extra=1, min_num=1)
 
 # Create your views here.
@@ -32,41 +31,18 @@ class PostCreateView(CreateView):
     template_name = 'post/post_new.html'
     form_class = PostForm
 
-    # def dispatch(self, *args, **kwargs):
-    #     return super(PostCreateView, self).dispatch(*args, **kwargs)
-
     def get_form(self):
         form = super().get_form()
         form.fields['start_datetime'].widget = MyDatePickerInput()
         form.fields['end_datetime'].widget = MyDatePickerInput()
         return form
 
+
     def form_valid(self, form):
-        parent_link = Post.objects.get(pk = form.cleaned_data['post_pk'])
         new_post = form.save(commit=False)
-        new_post.post = parent_link
         new_post.user = self.request.user
         new_post.save()
-        image_formset = ImageFormSet(self.request.POST, self.request.FILES,queryset=Post_image.objects.none())
-        for form in image_formset:
-            if form.is_valid():
-                print('에러에러')
-            else :
-                print(form,'\n')
-                image = form.cleaned_data['images']
-                photo = Post_image(review=new_post, images=image, user=self.request.user)
-                photo.save()
-
         return HttpResponseRedirect(reverse('main:list', kwargs={'pk':parent_link.pk}))
-
-    def get_initial(self):
-        initial_data = super(PostCreateView, self).get_initial()
-#         initial_data['post_pk'] = self.request.GET['post_pk']
-
-    def get_context_data(self, **kwargs):
-        ctx =  super(PostCreateView, self).get_context_data(**kwargs)
-        ctx['image_form'] = PostImageForm()
-        return ctx
 
 class PostUpdateView(UpdateView): 
     model = Post
