@@ -1,4 +1,4 @@
-from main.models import Post, Review, Qna, Review_image, Comment, Report
+from main.models import Post, Review, Qna, Review_image, Comment, Report, Application
 from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
@@ -53,8 +53,7 @@ class ConfirmForm(forms.ModelForm):
         fields=['confirm',]
 
 ImageFormSet = forms.inlineformset_factory(Review, Review_image, form=ImageForm, extra=2)
-        
-     
+
 '''custom field class widget 설정 및 유효성 검사 메소드 정의 '''
 # class MultipleChiceField(forms.ModelMultipleChoiceField):  # multipleChiceField 상속함
 #     widget = TagsInputWidget # widgets.py에서 정의 
@@ -89,9 +88,16 @@ class PostForm(forms.ModelForm):
         self.helper.add_input(Submit('submit', '글 올리기'))
 
 
-
 class ReportForm(forms.ModelForm):
     class Meta:
         model = Report
         fields = ('reporter_user','reported_user', 'reason', 'post_url')
+
+class ApplicationForm(PostForm):
+    class Meta:
+        model = Application
+        fields = ('end_date','start_time','end_time','purpost','add_more','phone','rental_person')
+        widgets = {
+                'end_date':MyDatePickerInput(options={'debug': True}),
+            }
    

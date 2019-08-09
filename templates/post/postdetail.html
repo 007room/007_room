@@ -19,6 +19,9 @@
 
 <h1>조회수: {% get_hit_count for object %}</h1>
 
+
+<a href="{% url 'post:application' post.id %}">신청하기</a>
+
 <script>
     //날짜계산
     var startDate = new Date("{{object.start_datetime.year}}", "{{object.start_datetime.month}}", "{{object.start_datetime.day}}", "{{object.start_datetime.hour}}", "{{object.start_datetime.minute}}");

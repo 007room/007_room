@@ -1,5 +1,5 @@
-from main.models import Post, Review, Qna, Review_image, Comment
-from .forms import ReviewForm, QnaForm, ImageFormSet,PostForm, CommentForm, ConfirmForm
+from main.models import Post, Review, Qna, Review_image, Comment, Application
+from .forms import ReviewForm, QnaForm, ImageFormSet,PostForm, CommentForm, ConfirmForm, ApplicationForm
 from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.views.generic import DetailView, CreateView, DeleteView,UpdateView, ListView, FormView
 from django.urls import reverse_lazy
@@ -176,9 +176,6 @@ def confirm_review(request):
     review.save()
     return HttpResponseRedirect(reverse('post:detail_review', kwargs={'pk':request.GET['post_pk']}))
 
-
-
-
 class ReportView(FormView):
     template_name = 'post/report.html'
     form_class = ReportForm
@@ -187,4 +184,15 @@ class ReportView(FormView):
     def form_valid(self, form): #post method로 값이 전달되면
         new_report = form.save(commit=False)
         new_report.save()
+        return HttpResponseRedirect(reverse('main:list', ))
+
+class ApplicationCreateView(CreateView):
+    model = Application
+    template_name = 'post/application.html'
+    form_class = ApplicationForm
+
+    def form_valid(self, form):
+        new_post = form.save(commit=False)
+        new_post.user = self.request.user
+        new_post.save()
         return HttpResponseRedirect(reverse('main:list', ))
