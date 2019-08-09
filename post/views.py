@@ -1,14 +1,13 @@
-from main.models import Post, Review, Qna, Review_image, Comment
-from .forms import ReviewForm, QnaForm, ImageFormSet,PostForm, CommentForm, ConfirmForm
+
+from main.models import *#Post, Review, Qna, Review_image, Comment
+from .forms import *
 from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.views.generic import DetailView, CreateView, DeleteView,UpdateView, ListView, FormView
 from django.urls import reverse_lazy
-from django.http.response import HttpResponseRedirect
+from django.http.response import HttpResponseRedirect, HttpResponse
 from hitcount.views import HitCountDetailView
-from .forms import ReviewForm, QnaForm, ImageForm, PostForm,MyDatePickerInput, ReportForm
 from django.forms import modelformset_factory
 from bootstrap_datepicker_plus import DateTimePickerInput
-
 
 ImageFormSet = modelformset_factory(Review_image, form=ImageForm, extra=1, min_num=1)
 
@@ -30,19 +29,21 @@ class PostCreateView(CreateView):
     model = Post
     template_name = 'post/post_new.html'
     form_class = PostForm
-    
+
     def get_form(self):
         form = super().get_form()
         form.fields['start_datetime'].widget = MyDatePickerInput()
         form.fields['end_datetime'].widget = MyDatePickerInput()
         return form
 
-    def form_valid(self, form):
+    def form_valid(self, form):       
         new_post = form.save(commit=False)
         new_post.user = self.request.user
         new_post.save()
-        return HttpResponseRedirect(reverse('main:list', ))
-        
+
+        return HttpResponseRedirect(reverse('main:list', kwargs={'pk':parent_link.pk}))
+
+
 class PostUpdateView(UpdateView): 
     model = Post
     template_name = 'post/update.html'
@@ -102,9 +103,8 @@ class ReviewCreateView(CreateView):
 
     def get_context_data(self, **kwargs):
         ctx =  super(ReviewCreateView, self).get_context_data(**kwargs)
-        # ctx['comment_form'] = ReviewForm(initial={'post_pk':self.object.pk})
-    
-
+        # ctx['comment_form'] = ReviewForm(initial={'post_pk':self.object.pk})  
+        return ctx
 
 class QnaCreateView(ReviewCreateView):
     model = Qna
@@ -131,17 +131,7 @@ class CommentCreateView(ReviewCreateView):
         new_comment.save()
         return HttpResponseRedirect(reverse('post:detail_qna', kwargs={'pk':parent_link.pk}))
 
-class PostCreateView(CreateView):
-    model = Post
-    template_name = 'post/post_new.html'
-    form_class = PostForm
 
-    def form_valid(self, form):
-        
-        new_post = form.save(commit=False)
-        new_post.user = self.request.user
-        new_post.save()
-        return HttpResponseRedirect(reverse('main:list', ))
         
 class QnaDetailView(ListView):
     model = Qna
@@ -177,14 +167,25 @@ def confirm_review(request):
     return HttpResponseRedirect(reverse('post:detail_review', kwargs={'pk':request.GET['post_pk']}))
 
 
-
-
 class ReportView(FormView):
     template_name = 'post/report.html'
     form_class = ReportForm
-    ordering = ['-created_date']           
+    ordering = ['-created_date']     
+    model = CustomUser      
 
     def form_valid(self, form): #post method로 값이 전달되면
         new_report = form.save(commit=False)
+        new_report.reporter_user = self.request.user
+        user = CustomUser.objects.filter(email = new_report.reported_user)
+        context = {}
+        context['user'] = user
         new_report.save()
-        return HttpResponseRedirect(reverse('main:list', ))
+        # return HttpResponseRedirect(reverse('post:report_done_check', ))
+        return render(self.request, 'post/report_done.html', context )   
+        
+# def ReportDoneCheck(request):
+#     return render(request, 'post/report_done.html')
+
+def ReportDone(request):
+    return HttpResponse('<script type="text/javascript">window.close()</script>') 
+

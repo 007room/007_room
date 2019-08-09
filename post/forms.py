@@ -1,4 +1,4 @@
-from main.models import Post, Review, Qna, Review_image, Comment, Report
+from main.models import *#Post, Review, Qna, Review_image, Comment, Report
 from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
@@ -39,6 +39,12 @@ class CommentForm(ReviewForm):
         fields = ('text',)
     
 
+# class PostImageForm(forms.ModelForm):
+#     post_pk = forms.IntegerField(widget=forms.HiddenInput)
+#     # images = forms.ImageField( widget=forms.FileInput)
+#     class Meta:
+#         model = Post_image
+#         fields = ['images',]
 
 class ImageForm(forms.ModelForm):
     review_pk = forms.IntegerField(widget=forms.HiddenInput)
@@ -53,6 +59,7 @@ class ConfirmForm(forms.ModelForm):
         fields=['confirm',]
 
 ImageFormSet = forms.inlineformset_factory(Review, Review_image, form=ImageForm, extra=2)
+# PostImageFormSet = forms.inlineformset_factory(Post, Post_image, form=ImageForm, extra=2)
         
      
 '''custom field class widget 설정 및 유효성 검사 메소드 정의 '''
@@ -71,6 +78,7 @@ class MyDatePickerInput(DateTimePickerInput):
     template = 'post/datetimepicker.html'
 
 class PostForm(forms.ModelForm):
+    post_pk = forms.IntegerField(widget=forms.HiddenInput)
 
     class Meta:
         model = Post
@@ -93,5 +101,5 @@ class PostForm(forms.ModelForm):
 class ReportForm(forms.ModelForm):
     class Meta:
         model = Report
-        fields = ('reporter_user','reported_user', 'reason', 'post_url')
+        fields = ('reported_user', 'reason', 'post_url', 'image')
    
