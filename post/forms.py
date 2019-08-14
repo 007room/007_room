@@ -57,7 +57,7 @@ class ConfirmForm(forms.ModelForm):
     class Meta:
         model = Review
         fields=['confirm',]
-
+# PostImageFormSet = forms.inlineformset_factory(Post, Post_image, form=ImageForm, extra=2)
 
 '''custom field class widget 설정 및 유효성 검사 메소드 정의 '''
 # class MultipleChiceField(forms.ModelMultipleChoiceField):  # multipleChiceField 상속함
@@ -95,7 +95,15 @@ class PostForm(forms.ModelForm):
 class ReportForm(forms.ModelForm):
     class Meta:
         model = Report
-        fields = ('reported_user', 'reason', 'post_url', 'image')
+        fields = ('reporter_user','reported_user', 'reason', 'post_url')
+
+class ApplicationForm(PostForm):
+    class Meta:
+        model = Application
+        fields = ('end_date','start_time','end_time','purpost','add_more','phone','rental_person')
+        widgets = {
+                'end_date':MyDatePickerInput(options={'debug': True}),
+            }
    
 ImageFormSet = forms.inlineformset_factory(Review, Review_image, form=ImageForm, extra=2)
 PostImageFormSet = forms.inlineformset_factory(Post, Post_image, form=PostImageForm, extra=2)

@@ -56,10 +56,7 @@ class PostCreateView(CreateView):
             for form in post_image_formset:
                 if form.is_valid():
                     image = form.cleaned_data.get('images', '')
-                    if image:
-                        photo = Post_image(post=new_post, images=image, user=self.request.user)
-                        photo.save()
-                    
+                                      
         else:
             print('에러에러')
 
@@ -82,7 +79,7 @@ class PostCreateView(CreateView):
     def get_context_data(self, **kwargs):
         ctx =  super(PostCreateView, self).get_context_data(**kwargs)
         print('aa')
-        ctx['post_image_formset'] = PostImageFormSet()
+        ctx['post_image_formset'] = PostImageFormSet(queryset=Post_image.objects.none())
         # ctx['post_image_form'] = PostImageForm(initial={'post_pk':self.object.pk})  
         return ctx
 
@@ -212,7 +209,6 @@ def confirm_review(request):
     review.save()
     return HttpResponseRedirect(reverse('post:detail_review', kwargs={'pk':request.GET['post_pk']}))
 
-
 class ReportView(FormView):
     template_name = 'post/report.html'
     form_class = ReportForm
@@ -226,6 +222,18 @@ class ReportView(FormView):
         context = {}
         context['user'] = user
         new_report.save()
+        return HttpResponseRedirect(reverse('main:list', ))
+
+class ApplicationCreateView(CreateView):
+    model = Application
+    template_name = 'post/application.html'
+    form_class = ApplicationForm
+
+    def form_valid(self, form):
+        new_post = form.save(commit=False)
+        new_post.user = self.request.user
+        new_post.save()
+        return HttpResponseRedirect(reverse('main:list', ))
         # return HttpResponseRedirect(reverse('post:report_done_check', ))
         return render(self.request, 'post/report_done.html', context )   
         
