@@ -56,10 +56,7 @@ class PostCreateView(CreateView):
             for form in post_image_formset:
                 if form.is_valid():
                     image = form.cleaned_data.get('images', '')
-                    if image:
-                        photo = Post_image(post=new_post, images=image, user=self.request.user)
-                        photo.save()
-                    
+                                      
         else:
             print('에러에러')
 
